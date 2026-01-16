@@ -69,6 +69,14 @@ jobs:
           for item in manifest["prompts"]:
               print(f"  - {item['id']} ({item['file']})")
           EOF
+      
+      - name: Debug - Check file status
+        run: |
+          echo "=== Git status before diff ==="
+          echo "=== Check if index.json exists ==="
+          ls -la prompts/index.json || echo "File does not exist"
+          echo "=== Git diff output ==="
+          git diff prompts/index.json || echo "No diff"
 
       - name: Check for changes
         id: check_changes
