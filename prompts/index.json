@@ -1,6 +1,10 @@
 {
   "prompts": [
     {
+      "id": "High-Contrast-BlacknWhite-Side-Profile-Portrait",
+      "file": "High-Contrast-BlacknWhite-Side-Profile-Portrait.json"
+    },
+    {
       "id": "Pink-Allure-with-a-Playful-Gaze",
       "file": "Pink-Allure-with-a-Playful-Gaze.json"
     }
