@@ -82,7 +82,7 @@ jobs:
         id: check_changes
         run: |
           git add prompts/index.json
-          if git diff --quiet prompts/index.json; then
+          if git diff --staged --quiet prompts/index.json; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "changed=true" >> $GITHUB_OUTPUT
