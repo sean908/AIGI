@@ -1,6 +1,10 @@
 {
   "prompts": [
     {
+      "id": "Doodle-style.json",
+      "file": "Doodle-style.json"
+    },
+    {
       "id": "High-Contrast-BlacknWhite-Side-Profile-Portrait",
       "file": "High-Contrast-BlacknWhite-Side-Profile-Portrait.json"
     },
