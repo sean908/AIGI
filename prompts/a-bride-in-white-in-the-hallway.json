@@ -1,0 +1,14 @@
+{
+  "id": "a-bride-in-white-in-the-hallway",
+  "title": "暖色长廊：婚纱",
+  "tags": ["图生图"],
+  "prompt": "Create a portrait of the person in the attached photo in a white off-the-shoulder wedding dress with lace details, wearing gloves, necklace, and earrings, in a dimly lit hallway with warm lighting.",
+  "images": {
+    "generated": [
+      "https://files.catbox.moe/zhd3g8.jpg"
+    ],
+    "input": ["https://files.catbox.moe/5hsj46.jpg"],
+    "example": ["https://files.catbox.moe/mvqcq1.jpg"]
+  },
+  "note": "twitter/real_novax/1996598193321054683\n示例图为直接生成"
+}
