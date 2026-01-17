@@ -1,0 +1,140 @@
+name: publish-to-pages
+
+# Branch semantics (source -> deployment):
+# - `main` is the source-of-truth for the entire repository.
+# - `pages` is the generated deployment branch for GitHub Pages.
+#   It is disposable: it is rebuilt from `main` and force-pushed on publish.
+#
+# Path mapping (source -> pages branch):
+# - Repository root in `main` is published verbatim to `pages` root.
+# - `prompts/index.json` is generated at deploy time and only exists on
+#   `pages`. It must not be committed to `main`.
+#
+# Deployment strategy (overwrite-only):
+# - Build a staging directory containing the entire repository
+#   (index.html, prompts/, etc.) plus a generated `prompts/index.json`.
+# - Commit that staging tree and force-push it to `pages`.
+
+'on':
+  push:
+    branches:
+      - main
+    paths:
+      - 'prompts/**'
+      - 'index.html'
+      - '!prompts/index.json'
+      - '!prompts-md/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build staging tree (entire repo + generated index.json)
+        shell: bash
+        env:
+          STAGE_DIR: ${{ runner.temp }}/pages-stage
+        run: |
+          set -euo pipefail
+
+          rm -rf "$STAGE_DIR"
+          mkdir -p "$STAGE_DIR"
+
+          # Copy entire repository content (excluding .git and build artifacts)
+          rsync -av \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='prompts-md' \
+            --exclude='*.bak' \
+            ./ "$STAGE_DIR/"
+
+          # Remove existing index.json (will be regenerated)
+          rm -f "$STAGE_DIR/prompts/index.json"
+
+          # Generate prompts/index.json recursively using Python
+          python3 <<'PYTHON'
+          import json
+          from pathlib import Path
+
+          prompts_dir = Path('$STAGE_DIR/prompts')
+          if not prompts_dir.exists():
+              print(f"Error: {prompts_dir} does not exist")
+              exit(1)
+
+          # Recursively find all .json files (excluding index.json and .sample files)
+          json_files = sorted([
+              str(f.relative_to(prompts_dir))
+              for f in prompts_dir.rglob('*.json')
+              if f.name != 'index.json' and not f.name.endswith('.sample')
+          ])
+
+          if not json_files:
+              print("Warning: No prompt files found")
+              # Create empty index
+              manifest = {"prompts": []}
+          else:
+              manifest = {"prompts": []}
+
+              for filename in json_files:
+                  file_path = prompts_dir / filename
+
+                  # Default ID from filename
+                  file_id = str(Path(filename).with_suffix(''))
+
+                  # Try to read ID from JSON
+                  try:
+                      with open(file_path, 'r', encoding='utf-8') as f:
+                          data = json.load(f)
+                          if isinstance(data, dict) and 'id' in data:
+                              file_id = data['id']
+                  except Exception as e:
+                      print(f"Warning: Failed to read {filename}: {e}")
+
+                  manifest["prompts"].append({
+                      "id": file_id,
+                      "file": filename
+                  })
+
+          # Write index.json
+          with open(prompts_dir / 'index.json', 'w', encoding='utf-8') as f:
+              json.dump(manifest, f, ensure_ascii=False, indent=2)
+              f.write('\n')
+
+          print(f"Generated index.json with {len(json_files)} prompts")
+          for item in manifest["prompts"]:
+              print(f"  - {item['id']} ({item['file']})")
+          PYTHON
+
+      - name: Force-push to pages branch
+        shell: bash
+        env:
+          STAGE_DIR: ${{ runner.temp }}/pages-stage
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          cd "$STAGE_DIR"
+
+          git init
+          git checkout -b pages
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+          git commit -m "Publish to pages" --no-gpg-sign
+
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push --force origin pages
