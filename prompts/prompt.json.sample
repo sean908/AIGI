@@ -1,0 +1,68 @@
+{
+  "_comment_1": "=== AIGI Prompt 文件格式说明 ===",
+  "_comment_2": "此文件展示如何创建一个站点可用的 prompt JSON 文件",
+  "_comment_3": "使用时请删除所有 _comment_ 开头的字段，并将文件名改为 your-prompt-id.json",
+
+  "id": "your-unique-prompt-id",
+  "_field_id": "【必需】唯一标识符，建议使用小写字母和连字符，如 'cyberpunk-city-night'。文件名应与 id 匹配（your-unique-prompt-id.json）",
+
+  "title": "你的提示词标题",
+  "_field_title": "【必需】显示在卡片上的标题，建议简洁明了，中英文均可",
+
+  "tags": ["风格", "主题", "技术"],
+  "_field_tags": "【必需】标签数组，用于分类和过滤。建议 2-5 个标签，可以包括：风格（如'水彩'、'赛博朋克'）、主题（如'风景'、'人物'）、技术（如'高清'、'写实'）",
+
+  "prompt": "Your detailed AI image generation prompt here. Include style, subject, composition, lighting, quality parameters, etc. Can be in English or Chinese.",
+  "_field_prompt": "【必需】实际的 AI 生图提示词。可以很长，支持特殊字符（需转义：\" \\ /）。建议包含：主题、风格、构图、光照、质量参数等",
+
+  "images": {
+    "generated": [
+      "https://example.com/generated-image-1.jpg",
+      "https://example.com/generated-image-2.jpg"
+    ],
+    "_field_generated": "【必需】AI 生成的图片 URL 数组。至少 1 张，支持多张。建议使用稳定的图床（如 GitHub、Imgur、自建服务器）",
+
+    "example": [
+      "https://example.com/original-photo.jpg"
+    ],
+    "_field_example": "【可选】原始参考图片 URL 数组。用于对比展示（如原图 vs 生成图）。如果没有原图可以省略此字段"
+  },
+
+  "note": "这里可以添加备注说明，如：使用的模型、参数设置、创作思路等",
+  "_field_note": "【可选】备注信息，会显示在详情页。可以包括：使用的 AI 模型、参数设置（steps、cfg、sampler）、创作灵感、注意事项等",
+
+  "_example_1": "=== 最小示例（仅必需字段）===",
+  "_example_1_content": {
+    "id": "simple-portrait",
+    "title": "简单人像",
+    "tags": ["人像", "写实"],
+    "prompt": "Professional portrait photo, natural lighting, high quality",
+    "images": {
+      "generated": ["https://example.com/portrait.jpg"]
+    }
+  },
+
+  "_example_2": "=== 完整示例（包含所有字段）===",
+  "_example_2_content": {
+    "id": "cyberpunk-city-night",
+    "title": "赛博朋克夜景",
+    "tags": ["赛博朋克", "城市", "夜景", "科幻"],
+    "prompt": "Cyberpunk city at night, neon lights, rain-soaked streets, flying cars, towering skyscrapers, holographic advertisements, cinematic composition, ultra high quality, 8k resolution",
+    "images": {
+      "generated": [
+        "https://example.com/cyberpunk-1.jpg",
+        "https://example.com/cyberpunk-2.jpg"
+      ],
+      "example": [
+        "https://example.com/city-reference.jpg"
+      ]
+    },
+    "note": "使用 Stable Diffusion XL，参数：steps=50, cfg=7.5, sampler=DPM++ 2M Karras"
+  },
+
+  "_tips_1": "提示：图片 URL 建议使用 HTTPS 协议",
+  "_tips_2": "提示：prompt 中的引号需要转义：用 \\\" 代替 \"",
+  "_tips_3": "提示：tags 会自动去重并用于过滤功能",
+  "_tips_4": "提示：文件保存为 UTF-8 编码，确保中文正常显示",
+  "_tips_5": "提示：创建文件后，运行 'node generate-prompts-index.js' 更新索引"
+}

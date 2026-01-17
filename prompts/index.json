@@ -1,0 +1,24 @@
+{
+  "prompts": [
+    {
+      "id": "Doodle-style",
+      "file": "Doodle-style.json"
+    },
+    {
+      "id": "Flat-Design-Illustration",
+      "file": "Flat-Design-Illustration.json"
+    },
+    {
+      "id": "High-Contrast-BlacknWhite-Side-Profile-Portrait",
+      "file": "High-Contrast-BlacknWhite-Side-Profile-Portrait.json"
+    },
+    {
+      "id": "Pink-Allure-with-a-Playful-Gaze",
+      "file": "Pink-Allure-with-a-Playful-Gaze.json"
+    },
+    {
+      "id": "a-bride-in-white-in-the-hallway",
+      "file": "a-bride-in-white-in-the-hallway.json"
+    }
+  ]
+}
