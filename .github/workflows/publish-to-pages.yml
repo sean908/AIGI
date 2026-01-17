@@ -64,9 +64,11 @@ jobs:
           rm -f "$STAGE_DIR/prompts/index.json"
 
           # Generate prompts/index.json recursively using Python
-          python3 <<'PYTHON'
+          # Note: Using unquoted heredoc delimiter to allow $STAGE_DIR expansion
+          python3 <<PYTHON
           import json
           from pathlib import Path
+          import os
 
           prompts_dir = Path('$STAGE_DIR/prompts')
           if not prompts_dir.exists():
