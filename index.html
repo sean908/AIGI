@@ -255,6 +255,12 @@
             gap: 24px;
         }
 
+        .grid-spacer {
+            grid-column: 1 / -1;
+            height: 0;
+            pointer-events: none;
+        }
+
         @media (max-width: 768px) {
             .grid {
                 grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -294,6 +300,24 @@
             transition: opacity 0.3s;
         }
 
+        .card-image-group { width: 100%; }
+
+        .card .image-frame {
+            border: none;
+            border-radius: 0;
+        }
+
+        .card .carousel-btn {
+            width: 32px;
+            height: 32px;
+            font-size: 18px;
+        }
+
+        .card .carousel-counter {
+            font-size: 11px;
+            padding: 3px 8px;
+        }
+
         .no-image {
             width: 100%;
             height: 100%;
@@ -307,6 +331,8 @@
         /* Card Content */
         .card-content {
             padding: 20px;
+            min-height: 140px;
+            overflow: hidden;
         }
 
         .card-title {
@@ -325,6 +351,8 @@
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+            max-height: 46px;
+            overflow: hidden;
         }
 
         .tag {
@@ -616,7 +644,7 @@
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <input type="text" id="searchInput" placeholder="搜索标题、提示词、标签...">
+                <input type="text" id="searchInput" placeholder="搜索标题、ID、标签...">
             </div>
             <div class="tags-container" id="tagsContainer">
                 <!-- Tags will be injected here -->
@@ -658,6 +686,9 @@
         const allTags = new Set();
         let activeDetailPrompt = null;
         let modalState = { type: '', urls: [], index: 0 };
+        const detailCache = new Map();
+        const detailInFlight = new Map();
+        let activeDetailRequestToken = 0;
 
         // DOM Elements
         const listPage = document.getElementById('listPage');
@@ -674,11 +705,31 @@
         const modalCounter = document.getElementById('modalCounter');
 
         async function fetchJson(url) {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Failed to load ${url}: ${response.status}`);
+            let response;
+            try {
+                response = await fetch(url);
+            } catch (error) {
+                const wrapped = new Error(`Network error while loading ${url}`);
+                wrapped.cause = error;
+                wrapped.url = url;
+                throw wrapped;
             }
-            return response.json();
+
+            if (!response.ok) {
+                const error = new Error(`Failed to load ${url}: ${response.status}`);
+                error.status = response.status;
+                error.url = url;
+                throw error;
+            }
+
+            try {
+                return await response.json();
+            } catch (error) {
+                const wrapped = new Error(`Failed to parse JSON from ${url}`);
+                wrapped.cause = error;
+                wrapped.url = url;
+                throw wrapped;
+            }
         }
 
         function normalizeImageList(value) {
@@ -691,13 +742,18 @@
 
         function normalizePrompt(rawPrompt, fallbackId) {
             const prompt = rawPrompt && typeof rawPrompt === 'object' ? rawPrompt : {};
-            const images = prompt.images && typeof prompt.images === 'object' ? { ...prompt.images } : {};
+            const images = (prompt.images && typeof prompt.images === 'object' && !Array.isArray(prompt.images))
+                ? { ...prompt.images }
+                : {};
 
             const tags = Array.isArray(prompt.tags)
                 ? prompt.tags.filter(tag => typeof tag === 'string' && tag.length > 0)
                 : [];
 
-            const generated = normalizeImageList(images.generated);
+            const hasTopGeneratedImages = Object.prototype.hasOwnProperty.call(prompt, 'generatedImages');
+            const generated = hasTopGeneratedImages
+                ? normalizeImageList(prompt.generatedImages)
+                : normalizeImageList(images.generated);
             const example = normalizeImageList(images.example ?? images.original);
             const input = normalizeImageList(images.input ?? images.reference);
 
@@ -712,6 +768,7 @@
                 prompt: typeof prompt.prompt === 'string' ? prompt.prompt : '',
                 tags,
                 note,
+                generatedImages: generated,
                 images: {
                     generated,
                     example,
@@ -725,9 +782,40 @@
             return file.replace(/\.json$/i, '');
         }
 
+        function buildPromptDetailUrl(id) {
+            const safeId = String(id || '');
+            const encoded = safeId.split('/').map(encodeURIComponent).join('/');
+            return `./prompts/${encoded}.json`;
+        }
+
+        async function loadSummary() {
+            console.info('[loader] trying prompts/summary.json');
+            const data = await fetchJson('./prompts/summary.json');
+            if (!Array.isArray(data)) throw new Error('Invalid prompts/summary.json format');
+            return data.map((prompt, index) => normalizePrompt(prompt, `summary-${index}`));
+        }
+
+        async function loadAggregatedPrompts() {
+            console.info('[loader] trying prompts/aggregated.json');
+            const data = await fetchJson('./prompts/aggregated.json');
+            const list = Array.isArray(data)
+                ? data
+                : (data && typeof data === 'object' ? data.prompts : null);
+            if (!Array.isArray(list)) throw new Error('Invalid prompts/aggregated.json format');
+
+            if (data && typeof data === 'object' && 'schemaVersion' in data && data.schemaVersion !== 2) {
+                console.warn('Unexpected aggregated schemaVersion:', data.schemaVersion);
+            }
+
+            return list.map((prompt, index) => normalizePrompt(prompt, `agg-${index}`));
+        }
+
         async function loadPromptsFromManifest() {
+            console.info('[loader] trying prompts/index.json');
             const manifest = await fetchJson('./prompts/index.json');
-            const entries = Array.isArray(manifest) ? manifest : manifest.prompts;
+            const entries = Array.isArray(manifest)
+                ? manifest
+                : (manifest && typeof manifest === 'object' ? manifest.prompts : null);
             if (!Array.isArray(entries)) throw new Error('Invalid prompts/index.json format');
 
             const results = await Promise.allSettled(entries.map(async (entry, index) => {
@@ -758,19 +846,91 @@
         }
 
         async function loadPromptsLegacy() {
+            console.info('[loader] trying prompts.json');
             const data = await fetchJson('./prompts.json');
-            const list = Array.isArray(data) ? data : data.prompts;
+            const list = Array.isArray(data)
+                ? data
+                : (data && typeof data === 'object' ? data.prompts : null);
             if (!Array.isArray(list)) throw new Error('Invalid prompts.json format');
             return list.map((prompt, index) => normalizePrompt(prompt, `legacy-${index}`));
         }
 
         async function loadAllPrompts() {
             try {
-                return await loadPromptsFromManifest();
+                const prompts = await loadSummary();
+                console.info('[loader] loaded via summary.json:', prompts.length);
+                return prompts;
             } catch (error) {
-                console.warn('prompts/index.json unavailable; fallback to prompts.json', error);
-                return await loadPromptsLegacy();
+                const notFound = error && typeof error === 'object' && error.status === 404;
+                if (notFound) {
+                    console.info('[loader] prompts/summary.json not found; falling back to aggregated.json');
+                } else {
+                    console.warn('[loader] prompts/summary.json failed; falling back to aggregated.json', error);
+                }
             }
+
+            try {
+                const prompts = await loadAggregatedPrompts();
+                console.info('[loader] loaded via aggregated.json:', prompts.length);
+                return prompts;
+            } catch (error) {
+                const notFound = error && typeof error === 'object' && error.status === 404;
+                if (notFound) {
+                    console.info('[loader] prompts/aggregated.json not found; falling back to index.json');
+                } else {
+                    console.warn('[loader] prompts/aggregated.json failed; falling back to index.json', error);
+                }
+            }
+
+            try {
+                const prompts = await loadPromptsFromManifest();
+                console.info('[loader] loaded via index.json manifest:', prompts.length);
+                return prompts;
+            } catch (error) {
+                const notFound = error && typeof error === 'object' && error.status === 404;
+                if (notFound) {
+                    console.info('[loader] prompts/index.json not found; falling back to prompts.json');
+                } else {
+                    console.warn('[loader] prompts/index.json failed; falling back to prompts.json', error);
+                }
+            }
+
+            const prompts = await loadPromptsLegacy();
+            console.info('[loader] loaded via legacy prompts.json:', prompts.length);
+            return prompts;
+        }
+
+        function loadDetailPrompt(id) {
+            const key = String(id || '');
+            if (!key) return Promise.reject(new Error('Missing prompt id'));
+
+            if (detailCache.has(key)) {
+                return Promise.resolve(detailCache.get(key));
+            }
+
+            if (detailInFlight.has(key)) {
+                return detailInFlight.get(key);
+            }
+
+            const url = buildPromptDetailUrl(key);
+            const request = fetchJson(url)
+                .then((data) => {
+                    const prompt = normalizePrompt(data, key);
+                    if (prompt.id !== key) {
+                        console.warn('[loader] detail id mismatch, overriding:', { requested: key, loaded: prompt.id });
+                        prompt.id = key;
+                    }
+                    detailCache.set(key, prompt);
+                    detailInFlight.delete(key);
+                    return prompt;
+                })
+                .catch((error) => {
+                    detailInFlight.delete(key);
+                    throw error;
+                });
+
+            detailInFlight.set(key, request);
+            return request;
         }
 
         function rebuildTags() {
@@ -804,7 +964,7 @@
 
             filteredPrompts = allPrompts.filter(prompt => {
                 const title = String(prompt.title || '').toLowerCase();
-                const promptText = String(prompt.prompt || '').toLowerCase();
+                const id = String(prompt.id || '').toLowerCase();
                 const tags = Array.isArray(prompt.tags) ? prompt.tags : [];
 
                 if (selectedTag && !tags.includes(selectedTag)) {
@@ -812,10 +972,10 @@
                 }
 
                 if (searchTerm) {
+                    const matchesId = id.includes(searchTerm);
                     const matchesTitle = title.includes(searchTerm);
-                    const matchesPrompt = promptText.includes(searchTerm);
                     const matchesTags = tags.some(tag => tag.toLowerCase().includes(searchTerm));
-                    if (!matchesTitle && !matchesPrompt && !matchesTags) {
+                    if (!matchesId && !matchesTitle && !matchesTags) {
                         return false;
                     }
                 }
@@ -834,37 +994,276 @@
             return '';
         }
 
+        function createCardElement(prompt) {
+            const coverUrl = getCoverImageUrl(prompt);
+            const generatedUrls = Array.isArray(prompt && prompt.generatedImages)
+                ? prompt.generatedImages.filter(Boolean)
+                : [];
+
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.dataset.promptId = prompt.id;
+
+            const imageContainer = document.createElement('div');
+            imageContainer.className = 'image-container';
+            card.appendChild(imageContainer);
+
+            if (generatedUrls.length > 0) {
+                imageContainer.appendChild(renderImageGroup(
+                    generatedUrls,
+                    'generated',
+                    String(prompt.title || prompt.id || ''),
+                    { containerClass: 'card-image-group', imageClass: 'card-image', enableModal: false }
+                ));
+            } else if (coverUrl) {
+                const img = document.createElement('img');
+                img.className = 'card-image';
+                img.src = coverUrl;
+                img.alt = String(prompt.title || '');
+                img.loading = 'lazy';
+                img.decoding = 'async';
+                imageContainer.appendChild(img);
+            } else {
+                const noImage = document.createElement('div');
+                noImage.className = 'no-image';
+                noImage.textContent = 'No Image';
+                imageContainer.appendChild(noImage);
+            }
+
+            const content = document.createElement('div');
+            content.className = 'card-content';
+            card.appendChild(content);
+
+            const title = document.createElement('div');
+            title.className = 'card-title';
+            title.title = String(prompt.title || '');
+            title.textContent = String(prompt.title || '');
+            content.appendChild(title);
+
+            const tags = Array.isArray(prompt.tags) ? prompt.tags : [];
+            if (tags.length > 0) {
+                const tagsEl = document.createElement('div');
+                tagsEl.className = 'card-tags';
+
+                tags.forEach(tag => {
+                    const tagEl = document.createElement('span');
+                    tagEl.className = 'tag';
+                    tagEl.textContent = String(tag);
+                    tagsEl.appendChild(tagEl);
+                });
+
+                content.appendChild(tagsEl);
+            }
+
+            return card;
+        }
+
+        const virtualGridState = {
+            topSpacer: null,
+            bottomSpacer: null,
+            cardHeight: 0,
+            rowGap: 0,
+            lastKey: '',
+            rafId: 0,
+            pendingForce: false,
+            resizeObserver: null
+        };
+
+        function parsePx(value) {
+            const n = Number.parseFloat(value);
+            return Number.isFinite(n) ? n : 0;
+        }
+
+        function getGridColumns() {
+            const style = getComputedStyle(grid);
+            const cols = style.gridTemplateColumns;
+            if (!cols || cols === 'none') return 1;
+            // Computed style expands repeat() into pixel lengths; count tokens.
+            const count = cols.split(' ').filter(Boolean).length;
+            return Math.max(1, count);
+        }
+
+        function getGridRowGap() {
+            const style = getComputedStyle(grid);
+            return parsePx(style.rowGap || style.gap || '0');
+        }
+
+        function calculateVisibleRange(scrollTop, viewportHeight, rowHeight, columns, totalItems, bufferRows) {
+            const safeColumns = Math.max(1, columns | 0);
+            const totalRows = Math.ceil(totalItems / safeColumns);
+            const safeRowHeight = rowHeight > 0 ? rowHeight : 1;
+
+            if (totalRows === 0) {
+                return { startIndex: 0, endIndex: 0, startRow: 0, endRow: -1, totalRows };
+            }
+
+            const rawFirstVisibleRow = Math.floor(scrollTop / safeRowHeight);
+            const rawLastVisibleRow = Math.floor((scrollTop + viewportHeight) / safeRowHeight);
+
+            const firstVisibleRow = Math.min(totalRows - 1, Math.max(0, rawFirstVisibleRow));
+            const lastVisibleRow = Math.min(totalRows - 1, Math.max(firstVisibleRow, rawLastVisibleRow));
+
+            const startRow = Math.max(0, firstVisibleRow - bufferRows);
+            const endRow = Math.min(totalRows - 1, lastVisibleRow + bufferRows);
+
+            const startIndex = Math.max(0, startRow * safeColumns);
+            const endIndex = Math.min(totalItems, (endRow + 1) * safeColumns);
+
+            return { startIndex, endIndex, startRow, endRow, totalRows };
+        }
+
+        function ensureGridSpacers() {
+            if (!virtualGridState.topSpacer) {
+                const el = document.createElement('div');
+                el.className = 'grid-spacer';
+                virtualGridState.topSpacer = el;
+            }
+            if (!virtualGridState.bottomSpacer) {
+                const el = document.createElement('div');
+                el.className = 'grid-spacer';
+                virtualGridState.bottomSpacer = el;
+            }
+        }
+
+        function scheduleVirtualGridUpdate(force) {
+            virtualGridState.pendingForce = virtualGridState.pendingForce || Boolean(force);
+            if (virtualGridState.rafId) return;
+            virtualGridState.rafId = requestAnimationFrame(() => {
+                virtualGridState.rafId = 0;
+                const runForce = virtualGridState.pendingForce;
+                virtualGridState.pendingForce = false;
+                updateVirtualGrid(runForce);
+            });
+        }
+
+        function updateVirtualGrid(force) {
+            if (listPage.hidden) return;
+            if (filteredPrompts.length === 0) return;
+
+            ensureGridSpacers();
+
+            const columns = getGridColumns();
+            const rowGap = getGridRowGap();
+            virtualGridState.rowGap = rowGap;
+
+            // Keep an estimate so we can set spacer heights before measurement.
+            const estimatedCardHeight = virtualGridState.cardHeight > 0 ? virtualGridState.cardHeight : 320;
+            const rowHeight = Math.max(1, estimatedCardHeight + rowGap);
+
+            const gridTop = grid.getBoundingClientRect().top + window.scrollY;
+            const scrollTop = Math.max(0, window.scrollY - gridTop);
+            const viewportHeight = window.innerHeight;
+            const bufferRows = 4;
+
+            const range = calculateVisibleRange(
+                scrollTop,
+                viewportHeight,
+                rowHeight,
+                columns,
+                filteredPrompts.length,
+                bufferRows
+            );
+
+            const topRows = range.startRow;
+            const bottomRows = range.totalRows - range.endRow - 1;
+
+            // Spacer elements live in the grid, so account for the single row-gap at each boundary.
+            const topHeight = topRows > 0 ? (topRows * rowHeight - rowGap) : 0;
+            const bottomHeight = bottomRows > 0 ? (bottomRows * rowHeight - rowGap) : 0;
+
+            const key = [
+                range.startIndex,
+                range.endIndex,
+                columns,
+                Math.round(rowHeight),
+                filteredPrompts.length,
+                Math.round(topHeight),
+                Math.round(bottomHeight)
+            ].join(':');
+
+            if (!force && key === virtualGridState.lastKey) return;
+            virtualGridState.lastKey = key;
+
+            const topSpacer = virtualGridState.topSpacer;
+            const bottomSpacer = virtualGridState.bottomSpacer;
+
+            if (topHeight > 0) {
+                topSpacer.style.display = '';
+                topSpacer.style.height = `${topHeight}px`;
+            } else {
+                topSpacer.style.display = 'none';
+                topSpacer.style.height = '0px';
+            }
+
+            if (bottomHeight > 0) {
+                bottomSpacer.style.display = '';
+                bottomSpacer.style.height = `${bottomHeight}px`;
+            } else {
+                bottomSpacer.style.display = 'none';
+                bottomSpacer.style.height = '0px';
+            }
+
+            const fragment = document.createDocumentFragment();
+            fragment.appendChild(topSpacer);
+
+            for (let i = range.startIndex; i < range.endIndex; i += 1) {
+                fragment.appendChild(createCardElement(filteredPrompts[i]));
+            }
+
+            fragment.appendChild(bottomSpacer);
+            grid.replaceChildren(fragment);
+
+            if (force || virtualGridState.cardHeight <= 0) {
+                // Measure after layout settles; if the estimate was off, rerender once.
+                requestAnimationFrame(() => {
+                    if (listPage.hidden) return;
+                    const firstCard = grid.querySelector('.card');
+                    if (!firstCard) return;
+                    const measured = firstCard.getBoundingClientRect().height;
+                    if (!Number.isFinite(measured) || measured <= 0) return;
+
+                    const rounded = Math.round(measured);
+                    const prev = virtualGridState.cardHeight;
+                    if (prev > 0 && Math.abs(rounded - prev) < 6) return;
+
+                    virtualGridState.cardHeight = rounded;
+                    virtualGridState.lastKey = '';
+                    scheduleVirtualGridUpdate(true);
+                });
+            }
+        }
+
         function renderPrompts() {
             if (filteredPrompts.length === 0) {
+                virtualGridState.lastKey = '';
+                virtualGridState.cardHeight = 0;
+                virtualGridState.topSpacer = null;
+                virtualGridState.bottomSpacer = null;
                 grid.innerHTML = '<div class="no-results">没有找到匹配的示例</div>';
                 return;
             }
 
-            grid.innerHTML = '';
+            virtualGridState.lastKey = '';
+            updateVirtualGrid(true);
+        }
 
-            filteredPrompts.forEach(prompt => {
-                const coverUrl = getCoverImageUrl(prompt);
+        window.addEventListener('scroll', () => {
+            scheduleVirtualGridUpdate(false);
+        }, { passive: true });
 
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.dataset.promptId = prompt.id;
+        window.addEventListener('resize', () => {
+            virtualGridState.cardHeight = 0;
+            virtualGridState.lastKey = '';
+            scheduleVirtualGridUpdate(true);
+        });
 
-                card.innerHTML = `
-                    <div class="image-container">
-                        ${coverUrl ? `<img src="${coverUrl}" alt="${prompt.title}" class="card-image">` : '<div class="no-image">No Image</div>'}
-                    </div>
-                    <div class="card-content">
-                        <div class="card-title" title="${prompt.title}">${prompt.title}</div>
-                        ${prompt.tags && prompt.tags.length > 0 ? `
-                            <div class="card-tags">
-                                ${prompt.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-
-                grid.appendChild(card);
+        if (window.ResizeObserver) {
+            virtualGridState.resizeObserver = new ResizeObserver(() => {
+                virtualGridState.cardHeight = 0;
+                virtualGridState.lastKey = '';
+                scheduleVirtualGridUpdate(true);
             });
+            virtualGridState.resizeObserver.observe(grid);
         }
 
         // Card click -> detail route
@@ -895,10 +1294,14 @@
         });
 
         // Detail rendering
-        function renderImageGroup(urls, type, altPrefix) {
+        function renderImageGroup(urls, type, altPrefix, options) {
             const list = Array.isArray(urls) ? urls.filter(Boolean) : [];
+            const opts = options && typeof options === 'object' ? options : {};
+            const containerClass = typeof opts.containerClass === 'string' ? opts.containerClass : 'detail-image-group';
+            const imageClass = typeof opts.imageClass === 'string' ? opts.imageClass : 'detail-image';
+            const enableModal = opts.enableModal !== undefined ? Boolean(opts.enableModal) : true;
             const group = document.createElement('div');
-            group.className = 'detail-image-group';
+            group.className = containerClass;
             if (list.length === 0) return group;
 
             const frame = document.createElement('div');
@@ -908,8 +1311,10 @@
             let currentIndex = 0;
 
             const img = document.createElement('img');
-            img.className = 'detail-image';
-            img.dataset.modalType = type;
+            img.className = imageClass;
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            if (enableModal) img.dataset.modalType = type;
 
             const prevBtn = document.createElement('button');
             prevBtn.className = 'carousel-btn prev';
@@ -932,7 +1337,11 @@
                 currentIndex = safeIndex;
                 img.src = list[safeIndex];
                 img.alt = `${altPrefix} ${safeIndex + 1}`;
-                img.dataset.modalIndex = String(safeIndex);
+                if (enableModal) {
+                    img.dataset.modalIndex = String(safeIndex);
+                } else {
+                    img.removeAttribute('data-modal-index');
+                }
                 counter.textContent = `${safeIndex + 1}/${total}`;
             };
 
@@ -1014,19 +1423,8 @@
             document.body.style.overflow = 'hidden';
         }
 
-        function renderDetail(id) {
+        function renderDetailPrompt(prompt) {
             detailContent.innerHTML = '';
-
-            const prompt = allPrompts.find(item => item.id === id);
-            if (!prompt) {
-                activeDetailPrompt = null;
-                const empty = document.createElement('div');
-                empty.className = 'no-results';
-                empty.textContent = `未找到 ID 为 "${id}" 的示例`;
-                detailContent.appendChild(empty);
-                return;
-            }
-
             activeDetailPrompt = prompt;
 
             const title = document.createElement('div');
@@ -1034,16 +1432,17 @@
             title.textContent = prompt.title || prompt.id;
             detailContent.appendChild(title);
 
-            if (prompt.tags.length > 0) {
-                const tags = document.createElement('div');
-                tags.className = 'detail-tags';
-                prompt.tags.forEach(tag => {
+            const tags = Array.isArray(prompt.tags) ? prompt.tags : [];
+            if (tags.length > 0) {
+                const tagsEl = document.createElement('div');
+                tagsEl.className = 'detail-tags';
+                tags.forEach(tag => {
                     const chip = document.createElement('span');
                     chip.className = 'tag';
                     chip.textContent = tag;
-                    tags.appendChild(chip);
+                    tagsEl.appendChild(chip);
                 });
-                detailContent.appendChild(tags);
+                detailContent.appendChild(tagsEl);
             }
 
             const promptSection = document.createElement('div');
@@ -1113,10 +1512,111 @@
             }
         }
 
+        async function renderDetail(id) {
+            const token = ++activeDetailRequestToken;
+            detailContent.innerHTML = '';
+            activeDetailPrompt = null;
+
+            const summary = allPrompts.find(item => item.id === id);
+            if (!summary) {
+                const empty = document.createElement('div');
+                empty.className = 'no-results';
+                empty.textContent = `未找到 ID 为 "${id}" 的示例`;
+                detailContent.appendChild(empty);
+                return;
+            }
+
+            const title = document.createElement('div');
+            title.className = 'detail-title';
+            title.textContent = summary.title || summary.id;
+            detailContent.appendChild(title);
+
+            const summaryTags = Array.isArray(summary.tags) ? summary.tags : [];
+            if (summaryTags.length > 0) {
+                const tagsEl = document.createElement('div');
+                tagsEl.className = 'detail-tags';
+                summaryTags.forEach(tag => {
+                    const chip = document.createElement('span');
+                    chip.className = 'tag';
+                    chip.textContent = tag;
+                    tagsEl.appendChild(chip);
+                });
+                detailContent.appendChild(tagsEl);
+            }
+
+            const hasFullPrompt = typeof summary.prompt === 'string' && summary.prompt.trim().length > 0;
+            if (hasFullPrompt) {
+                // Backward-compat: if we loaded an aggregated/full list, avoid redundant network fetch.
+                detailCache.set(id, summary);
+                renderDetailPrompt(summary);
+                return;
+            }
+
+            const loadingSection = document.createElement('div');
+            loadingSection.className = 'detail-section';
+            loadingSection.innerHTML = '<h2>Loading</h2>';
+            const loadingText = document.createElement('div');
+            loadingText.className = 'detail-note';
+            loadingText.textContent = '正在加载详情...';
+            loadingSection.appendChild(loadingText);
+            detailContent.appendChild(loadingSection);
+
+            try {
+                const prompt = await loadDetailPrompt(id);
+                if (token !== activeDetailRequestToken) return;
+                renderDetailPrompt(prompt);
+            } catch (error) {
+                if (token !== activeDetailRequestToken) return;
+                console.error('Error loading prompt detail:', { id, error });
+                detailContent.innerHTML = '';
+
+                const titleEl = document.createElement('div');
+                titleEl.className = 'detail-title';
+                titleEl.textContent = summary.title || summary.id;
+                detailContent.appendChild(titleEl);
+
+                if (summaryTags.length > 0) {
+                    const tagsEl = document.createElement('div');
+                    tagsEl.className = 'detail-tags';
+                    summaryTags.forEach(tag => {
+                        const chip = document.createElement('span');
+                        chip.className = 'tag';
+                        chip.textContent = tag;
+                        tagsEl.appendChild(chip);
+                    });
+                    detailContent.appendChild(tagsEl);
+                }
+
+                const section = document.createElement('div');
+                section.className = 'detail-section';
+                section.innerHTML = '<h2>Error</h2>';
+
+                const message = document.createElement('div');
+                message.className = 'detail-note';
+                const status = error && typeof error === 'object' && 'status' in error ? error.status : null;
+                message.textContent = status
+                    ? `详情加载失败（HTTP ${status}），请稍后重试`
+                    : '详情加载失败，请稍后重试';
+
+                const retryBtn = document.createElement('button');
+                retryBtn.className = 'back-btn';
+                retryBtn.type = 'button';
+                retryBtn.textContent = '重试';
+                retryBtn.addEventListener('click', () => {
+                    void renderDetail(id);
+                });
+
+                section.appendChild(message);
+                section.appendChild(retryBtn);
+                detailContent.appendChild(section);
+            }
+        }
+
         // Router
         function showListPage() {
             listPage.hidden = false;
             detailPage.hidden = true;
+            activeDetailRequestToken += 1; // invalidate in-flight detail fetch
             activeDetailPrompt = null;
             closeModal();
             filterAndRender();
@@ -1126,7 +1626,7 @@
             listPage.hidden = true;
             detailPage.hidden = false;
             closeModal();
-            renderDetail(id);
+            void renderDetail(id);
         }
 
         function renderRoute() {

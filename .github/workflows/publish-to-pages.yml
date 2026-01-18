@@ -1,27 +1,15 @@
 name: publish-to-pages
 
-# Branch semantics (source -> deployment):
-# - `main` is the source-of-truth for the entire repository.
-# - `pages` is the generated deployment branch for GitHub Pages.
-#   It is disposable: it is rebuilt from `main` and force-pushed on publish.
-#
-# Path mapping (source -> pages branch):
-# - Repository root in `main` is published verbatim to `pages` root.
-# - `prompts/index.json` is generated at deploy time and only exists on
-#   `pages`. It must not be committed to `main`.
-#
-# Deployment strategy (overwrite-only):
-# - Build a staging directory containing the entire repository
-#   (index.html, prompts/, etc.) plus a generated `prompts/index.json`.
-# - Commit that staging tree and force-push it to `pages`.
+# This workflow is designed for AIGI as a standalone repository.
+# In a monorepo setup, GitHub only reads workflows from the root .github/workflows/.
+# This file will only be active when AIGI is used as an independent project.
 
-'on':
+on:
   push:
     branches:
       - main
     paths:
-      - 'prompts/**'
-      - 'index.html'
+      - '**'
       - '!prompts/index.json'
       - '!prompts-md/**'
   workflow_dispatch:
@@ -37,12 +25,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Build staging tree (entire repo + generated index.json)
+      - name: Build staging tree (entire project + generated index.json + aggregated.json + summary.json)
         shell: bash
         env:
           STAGE_DIR: ${{ runner.temp }}/pages-stage
@@ -52,72 +35,427 @@ jobs:
           rm -rf "$STAGE_DIR"
           mkdir -p "$STAGE_DIR"
 
-          # Copy entire repository content (excluding .git and build artifacts)
-          rsync -av \
-            --exclude='.git' \
-            --exclude='.github' \
-            --exclude='prompts-md' \
-            --exclude='*.bak' \
-            ./ "$STAGE_DIR/"
+          # Copy entire project directory (index.html, prompts/, etc.)
+          cp -a . "$STAGE_DIR/"
+
+          # Remove prompts-md directory (not needed for deployment)
+          rm -rf "$STAGE_DIR/prompts-md"
 
           # Remove existing index.json (will be regenerated)
           rm -f "$STAGE_DIR/prompts/index.json"
+          # Remove existing generated files (will be regenerated). If these
+          # are left behind, the builders may scan them and fail validation.
+          rm -f "$STAGE_DIR/prompts/aggregated.json"
+          rm -f "$STAGE_DIR/prompts/summary.json"
 
-          # Generate prompts/index.json recursively using Python
-          # Note: Using unquoted heredoc delimiter to allow $STAGE_DIR expansion
-          python3 <<PYTHON
+          # Generate prompts/index.json deterministically from all
+          # prompts/**/*.json (recursive).
+          node - "$STAGE_DIR/prompts" <<'NODE'
+          'use strict';
+
+          const fs = require('fs');
+          const path = require('path');
+
+          const promptsDir = process.argv[2];
+          if (!promptsDir) {
+            throw new Error('Usage: node - <promptsDir>');
+          }
+
+          const EXCLUDED = new Set(['index.json', 'aggregated.json', 'summary.json', 'prompts.json']);
+
+          function walk(dirAbs) {
+            const out = [];
+            const entries = fs.readdirSync(dirAbs, { withFileTypes: true });
+            for (const e of entries) {
+              const p = path.join(dirAbs, e.name);
+              if (e.isDirectory()) {
+                out.push(...walk(p));
+                continue;
+              }
+              if (!e.isFile() || !e.name.endsWith('.json') || EXCLUDED.has(e.name)) continue;
+              out.push(p);
+            }
+            return out;
+          }
+
+          const entries = walk(promptsDir)
+            .map((abs) => path.relative(promptsDir, abs))
+            .map((rel) => rel.split(path.sep).join('/'))
+            .sort();
+
+          const prompts = [];
+          const seenIds = new Set();
+
+          for (const name of entries) {
+            const fullPath = path.join(promptsDir, name);
+            const raw = fs.readFileSync(fullPath, 'utf8');
+            let data;
+            try {
+              data = JSON.parse(raw);
+            } catch (err) {
+              throw new Error(`Invalid JSON in ${name}: ${err.message}`);
+            }
+
+            const fallbackId = name.replace(/\.json$/i, '');
+            const id =
+              data && typeof data.id === 'string' && data.id.trim()
+                ? data.id.trim()
+                : fallbackId;
+
+            if (seenIds.has(id)) {
+              throw new Error(`Duplicate prompt id "${id}"`);
+            }
+            seenIds.add(id);
+
+            prompts.push({ id, file: name });
+          }
+
+          prompts.sort((a, b) => a.id.localeCompare(b.id) || a.file.localeCompare(b.file));
+
+          const out = JSON.stringify({ prompts }, null, 2) + '\n';
+          fs.writeFileSync(path.join(promptsDir, 'index.json'), out, 'utf8');
+          NODE
+
+          # Generate prompts/aggregated.json (schemaVersion=2).
+          python3 - --prompts-dir "$STAGE_DIR/prompts" --output "$STAGE_DIR/prompts/aggregated.json" <<'PY'
+          from __future__ import annotations
+
+          import argparse
           import json
+          import sys
+          from datetime import datetime, timezone
           from pathlib import Path
-          import os
+          from typing import Any
 
-          prompts_dir = Path('$STAGE_DIR/prompts')
-          if not prompts_dir.exists():
-              print(f"Error: {prompts_dir} does not exist")
-              exit(1)
 
-          # Recursively find all .json files (excluding index.json and .sample files)
-          json_files = sorted([
-              str(f.relative_to(prompts_dir))
-              for f in prompts_dir.rglob('*.json')
-              if f.name != 'index.json' and not f.name.endswith('.sample')
-          ])
+          EXCLUDED_FILENAMES = {"index.json", "aggregated.json", "prompts.json"}
 
-          if not json_files:
-              print("Warning: No prompt files found")
-              # Create empty index
-              manifest = {"prompts": []}
-          else:
-              manifest = {"prompts": []}
 
-              for filename in json_files:
-                  file_path = prompts_dir / filename
+          class AggregationError(Exception):
+              """Raised for invalid prompt inputs (bad JSON, schema violations, duplicates)."""
 
-                  # Default ID from filename
-                  file_id = str(Path(filename).with_suffix(''))
 
-                  # Try to read ID from JSON
-                  try:
-                      with open(file_path, 'r', encoding='utf-8') as f:
-                          data = json.load(f)
-                          if isinstance(data, dict) and 'id' in data:
-                              file_id = data['id']
-                  except Exception as e:
-                      print(f"Warning: Failed to read {filename}: {e}")
+          def _iso_utc_now_seconds() -> str:
+              dt = datetime.now(timezone.utc).replace(microsecond=0)
+              return dt.isoformat().replace("+00:00", "Z")
 
-                  manifest["prompts"].append({
-                      "id": file_id,
-                      "file": filename
-                  })
 
-          # Write index.json
-          with open(prompts_dir / 'index.json', 'w', encoding='utf-8') as f:
-              json.dump(manifest, f, ensure_ascii=False, indent=2)
-              f.write('\n')
+          def iter_prompt_json_files(prompts_dir: Path) -> list[Path]:
+              files = [
+                  p
+                  for p in prompts_dir.rglob("*.json")
+                  if p.is_file() and p.name not in EXCLUDED_FILENAMES
+              ]
+              files.sort(key=lambda p: str(p.relative_to(prompts_dir)).replace("\\", "/"))
+              return files
 
-          print(f"Generated index.json with {len(json_files)} prompts")
-          for item in manifest["prompts"]:
-              print(f"  - {item['id']} ({item['file']})")
-          PYTHON
+
+          def _load_json_file(path: Path) -> Any:
+              try:
+                  raw = path.read_text(encoding="utf-8")
+              except OSError as e:
+                  raise AggregationError(f"failed to read {path}: {e}") from e
+
+              try:
+                  return json.loads(raw)
+              except json.JSONDecodeError as e:
+                  # Include line/col to make bad files easy to fix.
+                  raise AggregationError(
+                      f"invalid JSON in {path} (line {e.lineno}, col {e.colno}): {e.msg}"
+                  ) from e
+
+
+          def _require_nonempty_str(data: dict[str, Any], key: str, source: Path) -> str:
+              val = data.get(key)
+              if not isinstance(val, str) or not val.strip():
+                  raise AggregationError(f"{source}: missing/invalid required field {key!r}")
+              return val
+
+
+          def _normalize_prompt(data: Any, source: Path) -> dict[str, Any]:
+              if not isinstance(data, dict):
+                  raise AggregationError(f"{source}: expected a JSON object at top-level")
+
+              prompt_id = _require_nonempty_str(data, "id", source)
+              title = _require_nonempty_str(data, "title", source)
+              prompt = _require_nonempty_str(data, "prompt", source)
+
+              tags = data.get("tags", [])
+              if tags is None:
+                  tags = []
+              if not isinstance(tags, list) or any(not isinstance(t, str) for t in tags):
+                  raise AggregationError(f"{source}: field 'tags' must be a list of strings")
+
+              images = data.get("images", {})
+              if images is None:
+                  images = {}
+              if not isinstance(images, dict):
+                  raise AggregationError(f"{source}: field 'images' must be an object")
+
+              note = data.get("note", "")
+              if note is None:
+                  note = ""
+              if not isinstance(note, str):
+                  raise AggregationError(f"{source}: field 'note' must be a string")
+
+              return {
+                  "id": prompt_id,
+                  "title": title,
+                  "tags": tags,
+                  "prompt": prompt,
+                  "images": images,
+                  "note": note,
+              }
+
+
+          def build_aggregated_document(
+              prompts_dir: Path, *, generated_at: str | None = None
+          ) -> dict[str, Any]:
+              files = iter_prompt_json_files(prompts_dir)
+
+              prompts: list[dict[str, Any]] = []
+              seen_ids: set[str] = set()
+
+              for path in files:
+                  normalized = _normalize_prompt(_load_json_file(path), path)
+                  pid = normalized["id"]
+                  if pid in seen_ids:
+                      raise AggregationError(f"duplicate prompt id {pid!r}")
+                  seen_ids.add(pid)
+                  prompts.append(normalized)
+
+              prompts.sort(key=lambda p: p["id"])
+
+              return {
+                  "schemaVersion": 2,
+                  "generatedAt": generated_at or _iso_utc_now_seconds(),
+                  "prompts": prompts,
+              }
+
+
+          def write_aggregated_json(doc: dict[str, Any], output_path: Path) -> None:
+              output_path.parent.mkdir(parents=True, exist_ok=True)
+              payload = json.dumps(doc, ensure_ascii=False, indent=2) + "\n"
+              output_path.write_text(payload, encoding="utf-8")
+
+
+          def _parse_args(argv: list[str]) -> argparse.Namespace:
+              default_prompts_dir = Path.cwd() / "prompts"
+
+              p = argparse.ArgumentParser(
+                  description="Build AIGI/prompts/aggregated.json (schemaVersion=2)."
+              )
+              p.add_argument("--prompts-dir", type=Path, default=default_prompts_dir)
+              p.add_argument("--output", type=Path, default=None)
+              p.add_argument("--generated-at", default=None, help="Override generatedAt (ISO8601 string).")
+              return p.parse_args(argv)
+
+
+          def main(argv: list[str] | None = None) -> int:
+              args = _parse_args(sys.argv[1:] if argv is None else argv)
+
+              prompts_dir: Path = args.prompts_dir
+              if not prompts_dir.exists():
+                  print(f"error: prompts dir does not exist: {prompts_dir}", file=sys.stderr)
+                  return 2
+              if not prompts_dir.is_dir():
+                  print(f"error: not a directory: {prompts_dir}", file=sys.stderr)
+                  return 2
+
+              output: Path = (
+                  args.output if args.output is not None else (prompts_dir / "aggregated.json")
+              )
+
+              try:
+                  doc = build_aggregated_document(prompts_dir, generated_at=args.generated_at)
+                  write_aggregated_json(doc, output)
+              except AggregationError as e:
+                  print(f"error: {e}", file=sys.stderr)
+                  return 1
+              except OSError as e:
+                  print(f"error: failed to write {output}: {e}", file=sys.stderr)
+                  return 1
+
+              print(f"wrote {output} ({len(doc['prompts'])} prompts)")
+              return 0
+
+
+          if __name__ == "__main__":
+              raise SystemExit(main())
+          PY
+
+          # Generate prompts/summary.json (minimal summary index).
+          python3 - --prompts-dir "$STAGE_DIR/prompts" --output "$STAGE_DIR/prompts/summary.json" <<'PY'
+          from __future__ import annotations
+
+          import argparse
+          import json
+          import sys
+          from pathlib import Path
+          from typing import Any
+
+
+          EXCLUDED_FILENAMES = {"index.json", "aggregated.json", "summary.json", "prompts.json"}
+
+
+          class SummaryBuildError(Exception):
+              """Raised for invalid prompt inputs (bad JSON, schema violations)."""
+
+
+          def iter_prompt_json_files(prompts_dir: Path) -> list[Path]:
+              files = [
+                  p
+                  for p in prompts_dir.rglob("*.json")
+                  if p.is_file() and p.name not in EXCLUDED_FILENAMES
+              ]
+              files.sort(key=lambda p: str(p.relative_to(prompts_dir)).replace("\\", "/"))
+              return files
+
+
+          def _load_json_file(path: Path) -> Any:
+              try:
+                  raw = path.read_text(encoding="utf-8")
+              except OSError as e:
+                  raise SummaryBuildError(f"failed to read {path}: {e}") from e
+
+              try:
+                  return json.loads(raw)
+              except json.JSONDecodeError as e:
+                  raise SummaryBuildError(
+                      f"invalid JSON in {path} (line {e.lineno}, col {e.colno}): {e.msg}"
+                  ) from e
+
+
+          def _require_nonempty_str(data: dict[str, Any], key: str, source: Path) -> str:
+              val = data.get(key)
+              if not isinstance(val, str) or not val.strip():
+                  raise SummaryBuildError(f"{source}: missing/invalid required field {key!r}")
+              return val
+
+
+          def _require_str_list(val: Any, *, source: Path, field: str) -> list[str]:
+              if val is None:
+                  return []
+              if not isinstance(val, list) or any(not isinstance(x, str) for x in val):
+                  raise SummaryBuildError(f"{source}: field {field!r} must be a list of strings")
+              return val
+
+
+          def _expected_id_for_path(prompts_dir: Path, path: Path) -> str:
+              rel = path.relative_to(prompts_dir).with_suffix("")
+              return str(rel).replace("\\", "/")
+
+
+          def _extract_generated_images(data: dict[str, Any], source: Path) -> list[str]:
+              # Accept either the newer top-level field or the legacy images.generated.
+              if "generatedImages" in data:
+                  return _require_str_list(
+                      data.get("generatedImages"), source=source, field="generatedImages"
+                  )
+
+              images = data.get("images", {})
+              if images is None:
+                  images = {}
+              if not isinstance(images, dict):
+                  raise SummaryBuildError(f"{source}: field 'images' must be an object")
+              return _require_str_list(
+                  images.get("generated", []), source=source, field="images.generated"
+              )
+
+
+          def _normalize_summary_item(
+              data: Any, *, source: Path, prompts_dir: Path
+          ) -> dict[str, Any]:
+              if not isinstance(data, dict):
+                  raise SummaryBuildError(f"{source}: expected a JSON object at top-level")
+
+              prompt_id = _require_nonempty_str(data, "id", source)
+              expected_id = _expected_id_for_path(prompts_dir, source)
+              if prompt_id != expected_id:
+                  raise SummaryBuildError(
+                      f"{source}: id {prompt_id!r} does not match expected {expected_id!r}"
+                  )
+
+              title = _require_nonempty_str(data, "title", source)
+
+              if "tags" not in data:
+                  raise SummaryBuildError(f"{source}: missing required field 'tags'")
+              tags = _require_str_list(data.get("tags"), source=source, field="tags")
+
+              generated_images = _extract_generated_images(data, source)
+
+              return {
+                  "id": prompt_id,
+                  "title": title,
+                  "tags": tags,
+                  "generatedImages": generated_images,
+              }
+
+
+          def build_summary(prompts_dir: Path) -> list[dict[str, Any]]:
+              files = iter_prompt_json_files(prompts_dir)
+              out: list[dict[str, Any]] = []
+
+              for path in files:
+                  out.append(
+                      _normalize_summary_item(
+                          _load_json_file(path),
+                          source=path,
+                          prompts_dir=prompts_dir,
+                      )
+                  )
+
+              out.sort(key=lambda p: p["id"])
+              return out
+
+
+          def write_summary_json(items: list[dict[str, Any]], output_path: Path) -> None:
+              output_path.parent.mkdir(parents=True, exist_ok=True)
+              payload = json.dumps(items, ensure_ascii=False, indent=2) + "\n"
+              output_path.write_text(payload, encoding="utf-8")
+
+
+          def _parse_args(argv: list[str]) -> argparse.Namespace:
+              default_prompts_dir = Path.cwd() / "prompts"
+
+              p = argparse.ArgumentParser(
+                  description="Build AIGI/prompts/summary.json (minimal summary index)."
+              )
+              p.add_argument("--prompts-dir", type=Path, default=default_prompts_dir)
+              p.add_argument("--output", type=Path, default=None)
+              return p.parse_args(argv)
+
+
+          def main(argv: list[str] | None = None) -> int:
+              args = _parse_args(sys.argv[1:] if argv is None else argv)
+
+              prompts_dir: Path = args.prompts_dir
+              if not prompts_dir.exists():
+                  print(f"error: prompts dir does not exist: {prompts_dir}", file=sys.stderr)
+                  return 2
+              if not prompts_dir.is_dir():
+                  print(f"error: not a directory: {prompts_dir}", file=sys.stderr)
+                  return 2
+
+              output: Path = args.output if args.output is not None else (prompts_dir / "summary.json")
+
+              try:
+                  items = build_summary(prompts_dir)
+                  write_summary_json(items, output)
+              except SummaryBuildError as e:
+                  print(f"error: {e}", file=sys.stderr)
+                  return 1
+              except OSError as e:
+                  print(f"error: failed to write {output}: {e}", file=sys.stderr)
+                  return 1
+
+              print(f"wrote {output} ({len(items)} prompts)")
+              return 0
+
+
+          if __name__ == "__main__":
+              raise SystemExit(main())
+          PY
 
       - name: Force-push to pages branch
         shell: bash
