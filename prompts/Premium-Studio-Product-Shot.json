@@ -1,0 +1,24 @@
+{
+  "id": "Premium-Studio-Product-Shot",
+  "title": "「高大上」产品展示图",
+  "tags": [
+    "广告",
+    "宣传",
+    "物品"
+  ],
+  "prompt": "Studio shot of a [PRODUCT], elegantly positioned on a [background], soft ambient shadows, smooth gradient backdrop, high-key lighting, shallow depth of field, ultra-sharp focus on the subject, subtle reflections, minimal aesthetic, professional DSLR, premium commercial lighting setup, optimized for high-end product presentation",
+  "images": {
+    "generated": [
+      "https://files.catbox.moe/8amc58.jpg",
+      "https://files.catbox.moe/vwm2b4.jpg",
+      "https://files.catbox.moe/36a0r6.jpg"
+    ],
+    "input": [],
+    "example": [
+      "https://files.catbox.moe/t2aygd.jpg",
+      "https://files.catbox.moe/fkcqox.jpg",
+      "https://files.catbox.moe/i8q3m1.jpg"
+    ]
+  },
+  "note": "twitter/azed_ai/2011029744343744612\nGemini/Grok 实际生成的图片没有示例图好看"
+}

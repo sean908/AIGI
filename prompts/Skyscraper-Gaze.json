@@ -1,0 +1,23 @@
+{
+  "id": "Skyscraper-Gaze",
+  "title": "摩天大楼顶部的凝视",
+  "tags": [
+    "人像",
+    "图生图"
+  ],
+  "prompt": "{\n  \"prompt\": \"Cinematic film still, **extreme top-down MEDIUM shot**. The woman is positioned at the center of the frame, **looking directly up into the camera lens with intense eye contact**. Her figure is prominent and fills a significant portion of the frame. **Replicate the exact hairstyle, clothing, and accessories from the reference image faithfully.** She is sitting on the edge of the tallest skyscraper. The rooftop environment features rough concrete textures and chaotic steel structures. Far below, the blurred city buildings create a dizzying urban vertigo mood. **Dramatic warm natural daylight, high contrast, with sunlight reflecting in her eyes.** Muted industrial tones with visible film grain, Kodak Portra 800 aesthetic. Ultra-detailed, sharp focus on her face and eyes, 8K realism. --ar 3:4\",\n  \"negative_prompt\": \"looking away, eyes closed, looking down, wide shot, tiny subject, person too small, changing hairstyle, different clothing, low quality, distorted face\",\n  \"style\": \"high-fashion editorial, cinematic film still, analog film aesthetic\",\n  \"camera\": \"Top-down medium shot, looking directly up at camera\",\n  \"aspect_ratio\": \"3:4\",\n  \"lighting\": \"natural daylight, high contrast, catchlights in eyes\"\n}",
+  "images": {
+    "generated": [
+      "https://files.catbox.moe/mpowng.jpg",
+      "https://files.catbox.moe/mcggg3.jpg",
+      "https://files.catbox.moe/purxqu.jpg"
+    ],
+    "input": [
+      "https://files.catbox.moe/35b9d5.png"
+    ],
+    "example": [
+      "https://files.catbox.moe/9e8h7r.jpg"
+    ]
+  },
+  "note": "twitter/BeautyVerse_Lab/2010378808176873774\nGemini 需喂图, Grok可直出"
+}
