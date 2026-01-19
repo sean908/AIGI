@@ -1,0 +1,20 @@
+{
+  "id": "Morning-Light-and-Pure-Desire-Lace-Camisole-Bedroom-Portrait",
+  "title": "晨光、纯欲、蕾丝",
+  "tags": [
+    "人像"
+  ],
+  "prompt": "{\n  \"subject\": {\n    \"type\": \"stunning_East_Asian_woman_with_a_captivating_pure_desire_aesthetic\",\n    \"framing\": \"top-down_high-angle_selfie_portrait_lying_on_bed\",\n    \"age_vibe\": \"youthful_early_20s_with_a_mix_of_innocence_and_sultry_allure\",\n    \"features\": {\n      \"face_structure\": \"delicate_heart-shaped_face_with_soft_contours_and_dainty_chin\",\n      \"eyes\": \"large_misty_dark_brown_eyes_with_a_dreamy_heavy-lidded_gaze_looking_directly_at_camera, subtly_defined_by_very_thin_hidden_eyeliner_and_naturally_curled_lashes\",\n      \"nose\": \"slim_and_elegant_nose_bridge_with_a_refined_tip\",\n      \"hair\": \"voluminous_and_lazy_messy_ebony_black_hair_spread_out_on_the_pillow_with_wispy_strands_framing_the_face\",\n      \"expression\": \"pure_desire_expression_combining_innocent_vulnerability_with_a_sultry_come-hither_gaze_and_softly_parted_glossy_rosy_lips\"\n    },\n    \"skin_texture\": {\n      \"description\": \"flawless_and_clear_porcelain_skin_with_a_pure_and_even_complexion\",\n      \"details\": [\n        \"smooth_and_radiant_complexion_with_delicate_skin_pores\",\n        \"dramatic_vertical_beam_of_sunlight_bisecting_the_face_and_chest\",\n        \"perfectly_even_skin_tone_with_no_redness_or_visible_blush_on_cheeks\",\n        \"dewy_and_translucent_skin_glow_under_bright_light\",\n        \"softly_groomed_natural_brows_adding_definition_to_the_face\"\n      ],\n      \"makeup\": \"ultra-faint_'barely_there'_natural_makeup_look_enhancing_features_without_visible_color, incredibly_subtle_cool-toned_contour_for_dimension, sheer_hydrated_lip_balm_giving_a_healthy_'my_lips_but_better'_sheen, very_light_shimmer_on_tearducts\"\n    },\n    \"pose_structural_lock\": {\n      \"overall\": \"lying_flat_on_back_on_soft_white_pillows_looking_up_at_the_lens\",\n      \"arms\": \"arms_relaxed_and_slightly_bent_near_the_head_for_a_vulnerable_look\",\n      \"hands\": \"not_visible_out_of_frame\",\n      \"shoulders\": \"relaxed_shoulders_resting_on_the_bed_emphasizing_elegant_collarbones\"\n    }\n  },\n  \"apparel_specification\": {\n    \"outfit_main_piece\": {\n      \"description\": \"Delicate_white_lace_camisole_nightgown\",\n      \"material\": \"lightly_sheer_soft_silk_with_intricate_floral_lace_trimming\",\n      \"silhouette\": \"feminine_and_dainty_with_ultra-thin_spaghetti_straps_gently_hugging_a_softly_rounded_bust_shape\",\n      \"details\": \"detailed_lace_patterns_along_the_deep_v-neckline\"\n    },\n    \"accessories\": {\n      \"earrings\": \"none\",\n      \"jewelry\": \"none\"\n    }\n  },\n  \"environment\": {\n    \"setting\": \"Bright_airy_bedroom_on_a_sunny_morning\",\n    \"lighting\": \"striking_high-contrast_natural_lighting_with_soft_diffused_edges_and_sharp_sunlight\",\n    \"background\": \"soft_white_pillows_and_rumpled_white_bedsheets_with_blurred_textures\",\n    \"atmosphere\": \"intimate_lazy_and_ethereal_morning_vibe\"\n  },\n  \"realism_and_rendering\": {\n    \"style\": \"cinematic_lifestyle_photography_with_strong_light_and_shadow_play\",\n    \"camera\": \"High-end_mirrorless_camera_with_a_35mm_f1.4_lens_shallow_depth_of_field\",\n    \"image_quality\": \"hyper-realistic_textures_masterpiece_quality_natural_film_grain_8k\",\n    \"aspect_ratio\": \"3:4\"\n  }\n}",
+  "images": {
+    "generated": [
+      "https://files.catbox.moe/z1vrwl.jpg",
+      "https://files.catbox.moe/u57vup.jpg"
+    ],
+    "input": [],
+    "example": [
+      "https://files.catbox.moe/x3dlq6.jpg",
+      "https://files.catbox.moe/4x298s.jpg"
+    ]
+  },
+  "note": "twitter/BeautyVerse_Lab/2009892218316714089"
+}
