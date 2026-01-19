@@ -1,0 +1,22 @@
+{
+  "id": "RawCandid-Tokyo-Night-Smartphone-Flash-Blur",
+  "title": "夜间街角偶遇抓拍",
+  "tags": [
+    "图生图"
+  ],
+  "prompt": "Ultra-realistic candid smartphone photograph, 9:16 vertical.\nUse the attached image only as a strong visual inspiration for general facial proportions and vibe,\nwhile ensuring the generated subject remains fully original, non-identifiable, and not a face copy.\nScene\nNighttime on a quiet Tokyo city sidewalk beside a building with white ceramic tile walls.\nThe subject is walking past the camera, partially side-on, captured mid-step in a rushed, accidental moment.\nPoses & Gestures (combined naturally)\nThe subject reacts instinctively to being photographed:\nturning her head back mid-walk as if surprised,\nraising one hand close to the lens to partially block the camera,\nshy, restrained smile forming as she suppresses laughter,\nbody angled in half-profile while continuing to walk forward,\nmotion carries her slightly out of frame, imperfect framing.\nExpressions are subtle and spontaneous — embarrassed, playful, fleeting — never posed.\nCamera & Motion\nShot on a modern smartphone, handheld, rushed capture. Strong uncontrolled camera shake. Heavy directional motion blur across the raised hand, hair, and face. Facial features appear smeared and streaked by movement, faintly recognizable but distorted. Partial ghosting around the body. Imperfect framing, subject nearly leaving the frame.\nLighting\nFlash-only lighting fired mid-motion. Harsh flash highlights on skin and hand. Deep surrounding darkness. Uneven exposure, blown highlights, hard shadows typical of hurried night phone photography.\nBackground\nWhite ceramic tile wall stretches into streaked light bands due to motion blur. Street surroundings fade into darkness with minimal readable detail.\nMood\nCandid, shy, slightly playful. Feels intrusive, raw, imperfect, and authentic — like a fleeting memory accidentally captured and never meant to be perfect.\nImage Quality\nExtremely noisy. Heavily blurred. Raw smartphone look. Not cinematic. Not editorial. Not polished.\nNegative Prompt\nanime, illustration, painting, stylized,\nstudio lighting, beauty lighting, soft portrait,\nsharp focus, clean face, perfect anatomy, smooth skin,\nfashion editorial, posed portrait, cinematic grading, film still,\ntripod shot, professional photography,\nidentity match, face copy, real person replication",
+  "images": {
+    "generated": [
+      "https://files.catbox.moe/r2ftg3.jpg",
+      "https://files.catbox.moe/pf8tj0.jpg",
+      "https://files.catbox.moe/ajh5eb.jpg"
+    ],
+    "input": [
+      "https://files.catbox.moe/2376or.jpeg"
+    ],
+    "example": [
+      "https://files.catbox.moe/msyf5r.jpg"
+    ]
+  },
+  "note": "twitter/HustleXR/2011675822076411914\n原Prompt不会以Input为完整参照\n动作可能需要拆开多次生成"
+}
