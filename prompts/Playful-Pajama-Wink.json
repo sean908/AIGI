@@ -1,0 +1,22 @@
+{
+  "id": "Playful-Pajama-Wink",
+  "title": "缎面睡衣俏皮Wink",
+  "tags": [
+    "图生图"
+  ],
+  "prompt": "{\n  \"parameters\": {\n    \"subject_description\": \"A relaxed young woman with a playful, winking expression. Her hair is worn loose and down, styled in a natural, slightly messy 'bed-head' look, completely free of any hair accessories, ribbons, or clips. The vibe is effortless and authentically casual. [User Portrait Slot]\",\n    \"apparel_details\": \"Wearing a comfortable white satin pajama set (shirt and shorts) that catches the light softly, paired with simple white socks. [Apparel/Outfit Slot]\",\n    \"environment\": \"A warm, cluttered-cute bedroom full of comfort. She is lounging on a soft fabric sofa. The surrounding area (sofa and floor) is populated with adorable teddy bears and plush toys, creating a soft, 'kawaii' yet lived-in atmosphere. Background implies a cozy domestic night.\",\n    \"photographic_style\": {\n      \"aesthetic\": \"Cozy Home Snapshot, Soft Flash Aesthetics, Authentic Lifestyle\",\n      \"camera_angle\": \"High-angle shot with a wide lens (28mm) to accentuate the playful leg-up pose and capture the surrounding plushies.\",\n      \"lighting\": \"Soft direct flash mixed with warm bedroom ambient light (lamp light), creating a creamy, inviting tone without harshness.\",\n      \"color_grading\": \"Fujifilm Classic Negative (NC) style; slightly desaturated greens, warm skin tones, and soft highlights to emphasize the satin texture.\",\n      \"film_grain\": \"Subtle grain for a natural, unpolished look.\"\n    },\n    \"pose_reference\": \"Reclining on the sofa, kicking one leg up towards the camera (foreshortening), hand reaching forward or framing the face playfully. Spontaneous and energetic but relaxed.\",\n    \"negative_prompt\": \"hair accessories, hair clips, ribbons, ponytail, twin tails, stiff hair, perfect hair, jewelry, cold lighting, empty room, leather sofa, painting, illustration, 3d render, deformed, extra fingers, bad anatomy, harsh contrast, messy composition, distorted face.\"\n  },\n  \"generation_prompt\": \"portrait of a girl [User Portrait Slot] with loose slightly messy natural hair, no hair accessories, winking at camera, wearing white satin pajamas [Apparel/Outfit Slot] and white socks, lying on a soft sofa in a cute bedroom, surrounded by teddy bears and plush toys, leg kicked up high towards camera, foreshortening, dynamic perspective, soft flash photography, cozy atmosphere, warm ambient light, fujifilm classic negative, realistic texture, 28mm lens, --ar 3:4 --v 6.0 --no hair accessories\"\n}",
+  "images": {
+    "generated": [
+      "https://files.catbox.moe/7k88f2.jpg",
+      "https://files.catbox.moe/0qbp38.jpg"
+    ],
+    "input": [
+      "https://files.catbox.moe/b5of7z.png",
+      "https://files.catbox.moe/nqn8rz.png"
+    ],
+    "example": [
+      "https://files.catbox.moe/pe8k9m.jpg"
+    ]
+  },
+  "note": "twitter/sidona/2011056426953949247\nexample没有Input"
+}

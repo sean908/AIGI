@@ -1,0 +1,20 @@
+{
+  "id": "An-Intimate-Window-side-Portrait",
+  "title": "窗边的逆光随拍",
+  "tags": [
+    "人像"
+  ],
+  "prompt": "A cinematic, intimate portrait, taken in front of a large, bright window. A beautiful East Asian woman, with the visual appeal of a K-pop girl group member, 175cm tall and weighing 50kg, possesses a perfectly proportioned figure, with a full bust and shapely hips. She leans against the window frame in an innocent profile, glancing back at the camera with a gentle, shy smile. She wears a white cotton low-cut tank top. Strong sunlight streams down from behind her, penetrating her loosely styled hair and creating a dazzling halo around her shoulders. The image is sharply focused, clearly showing the fine downy hair on her cheeks and nose under the backlight. Her skin is fair and translucent, with a healthy glow. The edges of the white cotton fabric shimmer slightly in the sunlight. The overall atmosphere is authentic and intimate, achieved through high-key lighting supplemented with reflectors to ensure her face is bright yet soft.",
+  "images": {
+    "generated": [
+      "https://files.catbox.moe/10lyhf.png",
+      "https://files.catbox.moe/35b9d5.png",
+      "https://files.catbox.moe/qt30zr.jpg"
+    ],
+    "input": [],
+    "example": [
+      "https://files.catbox.moe/rlvtjr.jpg"
+    ]
+  },
+  "note": "twitter/WangYiNotes/2011025040851022203\nGemini❌ Grok✅"
+}
