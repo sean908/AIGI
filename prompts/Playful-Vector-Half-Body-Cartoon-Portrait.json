@@ -1,0 +1,23 @@
+{
+  "id": "Playful-Vector-Half-Body-Cartoon-Portrait",
+  "title": "趣味矢量卡通半身像",
+  "tags": [
+    "图生图",
+    "卡通化"
+  ],
+  "prompt": "Transform the character into a digital, half-body cartoon-style portrait. Use a playful, vector-friendly style with clean solid lines, rounded face, oversized googly eyes, and minimal facial details. Show the character from chest up, including shoulders and upper torso. Apply smooth gradient fills to both the character and background for a colorful, soft look. Square format.",
+  "images": {
+    "generated": [
+      "https://files.catbox.moe/gzf505.png",
+      "https://files.catbox.moe/7njkdq.png"
+    ],
+    "input": [],
+    "example": [
+      "https://files.catbox.moe/8z7ye3.jpg",
+      "https://files.catbox.moe/lutuq8.png",
+      "https://files.catbox.moe/3ympks.jpg",
+      "https://files.catbox.moe/8nk72n.jpg"
+    ]
+  },
+  "note": "X/fy360593/1945395833123561930\n应该是ChatGPT生成的, 但是没说具体模型\n实例图使用GPT 5.2"
+}
