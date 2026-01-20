@@ -1,0 +1,19 @@
+{
+  "id": "Playful-Winter-Plunge",
+  "title": "冬雪倩影",
+  "tags": [
+    "人像"
+  ],
+  "prompt": "{\n  \"project_name\": \"Winter_Playful_Fall_Dynamic_Impact\",\n  \"visual_narrative\": {\n    \"subject\": {\n      \"description\": \"A trendy young woman in the middle of a playful, natural fall backwards into deep snow. She is looking up at the camera with a cheeky, natural wink and a bright smile.\",\n      \"action\": \"The pose is dynamic and candid. As she lands/falls, her body displaces a massive burst of snow. One hand reaches eagerly towards the camera lens (creating extreme perspective foreshortening), while the other arm or elbows hit the snow, sending chunks of white powder flying upwards.\",\n      \"reference_slots\": {\n        \"face_detail\": \"[User Portrait Image: Natural Smile + Wink]\",\n        \"apparel_detail\": \"[User Apparel: Trendy Winter Fashion - e.g., Silver/White Glossy Puffer, Fur Accessories, Colorful Scarf]\",\n        \"pose_control\": \"[ControlNet: Depth/Canny - Falling Backward + Reaching Hand Perspective]\"\n      }\n    },\n    \"environment\": {\n      \"setting\": \"A sunlit snowfield with a deep blue sky backdrop. The perspective makes the sky feel expansive.\",\n      \"atmosphere\": \"Explosive and airy. The air is filled with flying snow clumps and fine powder mist caused by the impact of the fall, creating a 'frozen in time' effect.\",\n      \"sky\": \"Vibrant, cloudless azure blue.\"\n    }\n  },\n  \"technical_parameters\": {\n    \"camera\": {\n      \"lens\": \"18mm Wide-Angle Prime\",\n      \"aperture\": \"f/2.8\",\n      \"perspective\": \"First-Person POV (Point of View). The camera looks down as the subject falls away from it, with the hand coming close to the lens to emphasize depth.\",\n      \"shutter_speed\": \"1/4000s (To freeze the individual snow clumps and hair motion sharpness)\"\n    },\n    \"lighting\": {\n      \"type\": \"High-Key Sunlight\",\n      \"quality\": \"Crystal clear and transparent. The sunlight hits the flying snow particles, turning them into sparkling bokeh. The snow acts as a fill light, making the skin look translucent and fair.\",\n      \"contrast\": \"Medium-High contrast on textures, but low contrast on skin tones.\"\n    },\n    \"color_grading\": {\n      \"style\": \"Fujifilm Classic Negative (NC) - Vibrant & Airy\",\n      \"palette\": \"Clean White, Deep Sky Blue, Vibrant Fashion Colors, Rosy Skin Tones.\",\n      \"tone\": \"Bright, open shadows, slightly blown-out highlights in the snow for that 'blindingly bright winter' feel.\"\n    }\n  },\n  \"prompt_construction\": {\n    \"positive\": \"masterpiece, [User Portrait], playful falling backwards into snow, candid shot, dynamic motion, winking one eye, natural bright smile, hand reaching towards camera, extreme foreshortening, touching the lens, massive snow splash, snow powder flying into air, exploding snow, trendy winter fashion, glossy puffer jacket, sunny winter day, clear blue sky, high key lighting, transparent skin, airy atmosphere, sparkling ice crystals, frozen motion, sharp focus on eye, 8k, Fujifilm color science.\",\n    \"negative\": \"stiff pose, staged, fake expression, painful expression, dark, gloomy, motion blur on face, bad anatomy, distorted hands, missing fingers, extra fingers, ugly face, low resolution, muddy snow, grey sky, studio lighting, flat image.\"\n  }\n}",
+  "images": {
+    "generated": [
+      "https://files.catbox.moe/xusm4y.jpg",
+      "https://files.catbox.moe/34aneu.jpg"
+    ],
+    "input": [],
+    "example": [
+      "https://files.catbox.moe/gwzczf.jpg"
+    ]
+  },
+  "note": "X/sidona/2010984035552821598"
+}
