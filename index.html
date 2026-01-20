@@ -93,6 +93,36 @@
             display: flex;
             align-items: center;
             flex: none;
+            gap: 12px;
+        }
+
+        .lang-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 44px;
+            min-width: 44px;
+            padding: 0 14px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1;
+            cursor: pointer;
+            transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+        }
+
+        .lang-btn:hover {
+            background: var(--surface-hover);
+        }
+
+        .lang-btn:active { transform: translateY(1px); }
+
+        .lang-btn:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px var(--focus-ring);
         }
 
         .github-btn {
@@ -133,6 +163,11 @@
 
         @media (max-width: 480px) {
             header { padding: 0 16px; }
+
+            .lang-btn {
+                width: 44px;
+                padding: 0;
+            }
 
             .github-btn {
                 width: 44px;
@@ -623,6 +658,9 @@
             <span>🎨</span> a AIGI Prompts Lib
         </a>
         <div class="header-right">
+            <button id="langToggleBtn" class="lang-btn" type="button" aria-label="切换语言">
+                EN
+            </button>
             <a class="github-btn" href="https://github.com/sean908" target="_blank" rel="noopener noreferrer" aria-label="访问 GitHub 仓库">
                 <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                     <path fill="currentColor" d="M12 2C6.48 2 2 6.58 2 12.26c0 4.54 2.87 8.39 6.84 9.75.5.1.68-.22.68-.48 0-.24-.01-.88-.01-1.72-2.78.62-3.37-1.38-3.37-1.38-.45-1.19-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1.01.07 1.54 1.07 1.54 1.07.9 1.58 2.36 1.12 2.94.85.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.08 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05.8-.23 1.65-.34 2.5-.34s1.7.12 2.5.34c1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.95-2.35 4.82-4.59 5.07.36.32.68.95.68 1.92 0 1.38-.01 2.49-.01 2.83 0 .26.18.59.69.48A10.04 10.04 0 0 0 22 12.26C22 6.58 17.52 2 12 2z"/>
@@ -677,11 +715,29 @@
         </div>
     </div>
 
+    <script src="js/tag-i18n.js"></script>
     <script>
+        function getInitialLang() {
+            try {
+                const stored = localStorage.getItem('aigi-lang');
+                if (typeof stored === 'string' && stored.length > 0) {
+                    const normalized = stored.toLowerCase();
+                    if (normalized.startsWith('zh')) return 'zh';
+                    if (normalized.startsWith('en')) return 'en';
+                }
+            } catch (error) {
+                // localStorage may be blocked; fall back to navigator.language.
+            }
+
+            const navLang = String(navigator.language || '').toLowerCase();
+            return navLang.startsWith('zh') ? 'zh' : 'en';
+        }
+
         // State
         let allPrompts = [];
         let filteredPrompts = [];
         let selectedTag = null;
+        let currentLang = getInitialLang();
         let searchTimeout = null;
         const allTags = new Set();
         let activeDetailPrompt = null;
@@ -703,6 +759,46 @@
         const modalPrev = document.getElementById('modalPrev');
         const modalNext = document.getElementById('modalNext');
         const modalCounter = document.getElementById('modalCounter');
+        const langToggleBtn = document.getElementById('langToggleBtn');
+
+        function updateLangToggleUi() {
+            if (!langToggleBtn) return;
+            const nextLabel = currentLang === 'zh' ? 'EN' : '中';
+            langToggleBtn.textContent = nextLabel;
+            langToggleBtn.title = nextLabel;
+            langToggleBtn.setAttribute(
+                'aria-label',
+                currentLang === 'zh' ? 'Switch language to English' : '切换语言到中文'
+            );
+        }
+
+        function setLang(lang) {
+            const raw = String(lang || '').toLowerCase();
+            const normalized = raw.startsWith('zh') ? 'zh' : 'en';
+            const changed = normalized !== currentLang;
+
+            currentLang = normalized;
+            document.documentElement.lang = normalized;
+
+            try {
+                localStorage.setItem('aigi-lang', normalized);
+            } catch (error) {
+                // Ignore storage failures (private mode, blocked storage, etc).
+            }
+
+            updateLangToggleUi();
+            if (!changed) return;
+            rebuildTags();
+            renderTags();
+            filterAndRender();
+            if (!detailPage.hidden && activeDetailPrompt) renderDetailPrompt(activeDetailPrompt);
+        }
+
+        if (langToggleBtn) {
+            langToggleBtn.addEventListener('click', () => {
+                setLang(currentLang === 'zh' ? 'en' : 'zh');
+            });
+        }
 
         async function fetchJson(url) {
             let response;
@@ -936,39 +1032,47 @@
         function rebuildTags() {
             allTags.clear();
             allPrompts.forEach(prompt => {
-                prompt.tags.forEach(tag => allTags.add(tag));
+                const tags = Array.isArray(prompt.tags) ? prompt.tags : [];
+                tags.forEach(tag => {
+                    const canonical = normalizeTag(tag);
+                    if (canonical) allTags.add(canonical);
+                });
             });
         }
 
         function renderTags() {
-            const sortedTags = Array.from(allTags).sort();
+            const sortedTags = Array.from(allTags)
+                .map((key) => ({ key, label: translateTag(key, currentLang) }))
+                .sort((a, b) => a.label.localeCompare(b.label));
             tagsContainer.innerHTML = '';
 
             const allBtn = document.createElement('button');
             allBtn.className = `tag-btn${selectedTag ? '' : ' active'}`;
             allBtn.dataset.tag = 'all';
-            allBtn.textContent = '全部';
+            allBtn.textContent = currentLang === 'zh' ? '全部' : 'All';
             tagsContainer.appendChild(allBtn);
 
-            sortedTags.forEach(tag => {
+            sortedTags.forEach(({ key, label }) => {
                 const btn = document.createElement('button');
-                btn.className = `tag-btn${selectedTag === tag ? ' active' : ''}`;
-                btn.dataset.tag = tag;
-                btn.textContent = tag;
+                btn.className = `tag-btn${selectedTag === key ? ' active' : ''}`;
+                btn.dataset.tag = key;
+                btn.textContent = label;
                 tagsContainer.appendChild(btn);
             });
         }
 
         function filterAndRender() {
             const searchTerm = searchInput.value.toLowerCase();
+            const selectedKey = selectedTag ? normalizeTag(selectedTag) : null;
 
             filteredPrompts = allPrompts.filter(prompt => {
                 const title = String(prompt.title || '').toLowerCase();
                 const id = String(prompt.id || '').toLowerCase();
                 const tags = Array.isArray(prompt.tags) ? prompt.tags : [];
 
-                if (selectedTag && !tags.includes(selectedTag)) {
-                    return false;
+                if (selectedKey) {
+                    const hasSelectedTag = tags.some(tag => normalizeTag(tag) === selectedKey);
+                    if (!hasSelectedTag) return false;
                 }
 
                 if (searchTerm) {
@@ -1048,7 +1152,7 @@
                 tags.forEach(tag => {
                     const tagEl = document.createElement('span');
                     tagEl.className = 'tag';
-                    tagEl.textContent = String(tag);
+                    tagEl.textContent = translateTag(tag, currentLang);
                     tagsEl.appendChild(tagEl);
                 });
 
@@ -1439,7 +1543,7 @@
                 tags.forEach(tag => {
                     const chip = document.createElement('span');
                     chip.className = 'tag';
-                    chip.textContent = tag;
+                    chip.textContent = translateTag(tag, currentLang);
                     tagsEl.appendChild(chip);
                 });
                 detailContent.appendChild(tagsEl);
@@ -1538,7 +1642,7 @@
                 summaryTags.forEach(tag => {
                     const chip = document.createElement('span');
                     chip.className = 'tag';
-                    chip.textContent = tag;
+                    chip.textContent = translateTag(tag, currentLang);
                     tagsEl.appendChild(chip);
                 });
                 detailContent.appendChild(tagsEl);
@@ -1581,7 +1685,7 @@
                     summaryTags.forEach(tag => {
                         const chip = document.createElement('span');
                         chip.className = 'tag';
-                        chip.textContent = tag;
+                        chip.textContent = translateTag(tag, currentLang);
                         tagsEl.appendChild(chip);
                     });
                     detailContent.appendChild(tagsEl);
@@ -1681,6 +1785,10 @@
         // Initialize
         async function init() {
             try {
+                currentLang = getInitialLang();
+                document.documentElement.lang = currentLang;
+                updateLangToggleUi();
+
                 allPrompts = await loadAllPrompts();
                 rebuildTags();
                 renderTags();

@@ -1,0 +1,137 @@
+{
+  "cyberpunk": {
+    "en": "Cyberpunk",
+    "zh": "赛博朋克",
+    "aliases": ["赛博朋克", "Cyberpunk", "cyber punk"]
+  },
+  "image-to-image": {
+    "en": "Image to Image",
+    "zh": "图生图",
+    "aliases": ["图生图"]
+  },
+  "ads": {
+    "en": "ADs",
+    "zh": "广告",
+    "aliases": ["广告"]
+  },
+  "city": {
+    "en": "City",
+    "zh": "城市",
+    "aliases": ["城市", "City", "urban"]
+  },
+  "night": {
+    "en": "Night",
+    "zh": "夜景",
+    "aliases": ["夜景", "夜晚", "Night", "night scene"]
+  },
+  "watercolor": {
+    "en": "Watercolor",
+    "zh": "水彩",
+    "aliases": ["水彩", "Watercolor", "water colour"]
+  },
+  "landscape": {
+    "en": "Landscape",
+    "zh": "风景",
+    "aliases": ["风景", "Landscape", "scenery"]
+  },
+  "art": {
+    "en": "Art",
+    "zh": "艺术",
+    "aliases": ["艺术", "Art", "artwork"]
+  },
+  "sci-fi": {
+    "en": "Sci-Fi",
+    "zh": "科幻",
+    "aliases": ["科幻", "Sci-Fi", "SciFi", "science fiction"]
+  },
+  "character": {
+    "en": "Character",
+    "zh": "角色",
+    "aliases": ["角色", "人物", "Character"]
+  },
+  "design": {
+    "en": "Design",
+    "zh": "设计",
+    "aliases": ["设计", "Design"]
+  },
+  "chinese-style": {
+    "en": "Chinese Style",
+    "zh": "古风",
+    "aliases": ["古风", "国风", "Chinese style", "oriental"]
+  },
+  "portrait": {
+    "en": "Portrait",
+    "zh": "人像",
+    "aliases": ["肖像", "Portrait", "headshot", "人像"]
+  },
+  "traditional": {
+    "en": "Traditional",
+    "zh": "传统",
+    "aliases": ["传统", "Traditional", "classic"]
+  },
+  "surreal": {
+    "en": "Surreal",
+    "zh": "超现实",
+    "aliases": ["超现实", "Surreal", "surrealism"]
+  },
+  "dream": {
+    "en": "Dream",
+    "zh": "梦境",
+    "aliases": ["梦境", "Dream", "dreamscape"]
+  },
+  "test": {
+    "en": "Test",
+    "zh": "测试",
+    "aliases": ["测试", "Test", "testing"]
+  },
+  "json": {
+    "en": "JSON",
+    "zh": "JSON",
+    "aliases": ["JSON", "json"]
+  },
+  "special-characters": {
+    "en": "Special Characters",
+    "zh": "特殊字符",
+    "aliases": ["特殊字符", "Special characters", "special chars"]
+  },
+  "anime": {
+    "en": "Anime",
+    "zh": "动漫",
+    "aliases": ["动漫", "动画", "Anime", "anime style"]
+  },
+  "photorealistic": {
+    "en": "Photorealistic",
+    "zh": "写实",
+    "aliases": ["写实", "Photorealistic", "realistic"]
+  },
+  "illustration": {
+    "en": "Illustration",
+    "zh": "插画",
+    "aliases": ["插画", "Illustration", "illustrated"]
+  },
+  "3d": {
+    "en": "3D",
+    "zh": "3D",
+    "aliases": ["3D", "3d", "CG"]
+  },
+  "fantasy": {
+    "en": "Fantasy",
+    "zh": "奇幻",
+    "aliases": ["奇幻", "Fantasy", "fantastical"]
+  },
+  "abstract": {
+    "en": "Abstract",
+    "zh": "抽象",
+    "aliases": ["抽象", "Abstract"]
+  },
+  "architecture": {
+    "en": "Architecture",
+    "zh": "建筑",
+    "aliases": ["建筑", "Architecture"]
+  },
+  "minimal": {
+    "en": "Minimal",
+    "zh": "极简",
+    "aliases": ["极简", "简约", "Minimal", "minimalism"]
+  }
+}
