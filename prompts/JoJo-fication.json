@@ -1,0 +1,20 @@
+{
+  "id": "JoJo-fication",
+  "title": "ジョジョ(JoJo)化",
+  "tags": [
+    "漫画化"
+  ],
+  "prompt": "Traditional art scan, raw graphite pencil sketch on textured paper. The art style is distinctly Hirohiko Araki, Jojo's Bizarre Adventure aesthetic. Gritty, monochrome manga panel feel. A full body shot of [在此处填入你的主题], striking an exaggerated, dramatic \"JoJo pose\" with contorted limbs, impossible anatomy, and intense dynamic perspective. High-fashion sculptural stance. Emphasize muscle structure and tension. Heavy angular cross-hatching for shading, bold chiseled thick outlines, intensely detailed facial features with thick lips and sharp eyes. Visible aggressive pencil strokes. High contrast. Intense aura. \n9:16",
+  "images": {
+    "generated": [
+      "https://files.catbox.moe/jku7ph.jpg"
+    ],
+    "input": [
+      "https://files.catbox.moe/pxr3xu.png"
+    ],
+    "example": [
+      "https://files.catbox.moe/6a5uk4.jpg"
+    ]
+  },
+  "note": "X/VoxcatAI/2010963973240471826\n可 图生图"
+}
