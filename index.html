@@ -312,6 +312,8 @@
             transition: all 0.3s;
             position: relative;
             cursor: pointer;
+            /* Hint browser to optimize transform and box-shadow animations */
+            will-change: transform, box-shadow;
         }
 
         .card:hover {
@@ -388,6 +390,25 @@
             flex-wrap: wrap;
             max-height: 46px;
             overflow: hidden;
+            position: relative;
+        }
+
+        /* Add gradient fade for overflowing tags */
+        .card-tags::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 60px;
+            height: 20px;
+            background: linear-gradient(to right, transparent, var(--background));
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .card-tags.has-overflow::after {
+            opacity: 1;
         }
 
         .tag {
@@ -397,6 +418,19 @@
             border-radius: 999px;
             font-size: 11px;
             font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* Mobile responsive adjustments */
+        @media (max-width: 768px) {
+            .card-tags {
+                gap: 6px;
+            }
+
+            .tag {
+                font-size: 10px;
+                padding: 3px 8px;
+            }
         }
 
         /* No Results */
@@ -1098,7 +1132,7 @@
             return '';
         }
 
-        function createCardElement(prompt) {
+        function createCardElement(prompt, isFirstScreen) {
             const coverUrl = getCoverImageUrl(prompt);
             const generatedUrls = Array.isArray(prompt && prompt.generatedImages)
                 ? prompt.generatedImages.filter(Boolean)
@@ -1117,15 +1151,24 @@
                     generatedUrls,
                     'generated',
                     String(prompt.title || prompt.id || ''),
-                    { containerClass: 'card-image-group', imageClass: 'card-image', enableModal: false }
+                    { containerClass: 'card-image-group', imageClass: 'card-image', enableModal: false, eager: isFirstScreen }
                 ));
             } else if (coverUrl) {
                 const img = document.createElement('img');
                 img.className = 'card-image';
                 img.src = coverUrl;
                 img.alt = String(prompt.title || '');
-                img.loading = 'lazy';
+                // First screen images load eagerly, others lazy
+                img.loading = isFirstScreen ? 'eager' : 'lazy';
                 img.decoding = 'async';
+                // Add error handling
+                img.onerror = () => {
+                    img.style.display = 'none';
+                    const fallback = document.createElement('div');
+                    fallback.className = 'no-image';
+                    fallback.textContent = 'Image Load Failed';
+                    imageContainer.appendChild(fallback);
+                };
                 imageContainer.appendChild(img);
             } else {
                 const noImage = document.createElement('div');
@@ -1157,6 +1200,13 @@
                 });
 
                 content.appendChild(tagsEl);
+
+                // Check for overflow after render
+                requestAnimationFrame(() => {
+                    if (tagsEl.scrollHeight > tagsEl.clientHeight) {
+                        tagsEl.classList.add('has-overflow');
+                    }
+                });
             }
 
             return card;
@@ -1251,7 +1301,9 @@
             virtualGridState.rowGap = rowGap;
 
             // Keep an estimate so we can set spacer heights before measurement.
-            const estimatedCardHeight = virtualGridState.cardHeight > 0 ? virtualGridState.cardHeight : 320;
+            // Use responsive estimates: mobile ~270px, desktop ~320px
+            const defaultEstimate = window.innerWidth <= 768 ? 270 : 320;
+            const estimatedCardHeight = virtualGridState.cardHeight > 0 ? virtualGridState.cardHeight : defaultEstimate;
             const rowHeight = Math.max(1, estimatedCardHeight + rowGap);
 
             const gridTop = grid.getBoundingClientRect().top + window.scrollY;
@@ -1310,8 +1362,11 @@
             const fragment = document.createDocumentFragment();
             fragment.appendChild(topSpacer);
 
+            // First 6-12 cards (first screen) load eagerly
+            const firstScreenCount = columns * 2;
             for (let i = range.startIndex; i < range.endIndex; i += 1) {
-                fragment.appendChild(createCardElement(filteredPrompts[i]));
+                const isFirstScreen = i < firstScreenCount;
+                fragment.appendChild(createCardElement(filteredPrompts[i], isFirstScreen));
             }
 
             fragment.appendChild(bottomSpacer);
@@ -1328,7 +1383,9 @@
 
                     const rounded = Math.round(measured);
                     const prev = virtualGridState.cardHeight;
-                    if (prev > 0 && Math.abs(rounded - prev) < 6) return;
+                    // Increase tolerance to 40px to reduce unnecessary re-renders
+                    // This covers image loading height changes and prevents oscillation
+                    if (prev > 0 && Math.abs(rounded - prev) < 40) return;
 
                     virtualGridState.cardHeight = rounded;
                     virtualGridState.lastKey = '';
@@ -1362,10 +1419,28 @@
         });
 
         if (window.ResizeObserver) {
-            virtualGridState.resizeObserver = new ResizeObserver(() => {
-                virtualGridState.cardHeight = 0;
-                virtualGridState.lastKey = '';
-                scheduleVirtualGridUpdate(true);
+            let resizeDebounceTimer;
+            let lastGridWidth = 0;
+            virtualGridState.resizeObserver = new ResizeObserver((entries) => {
+                // Only trigger on width changes (responsive layout), ignore height changes
+                const entry = entries[0];
+                if (!entry) return;
+
+                const newWidth = entry.contentRect.width;
+                // Ignore minor width fluctuations (< 10px) to prevent false triggers
+                if (lastGridWidth > 0 && Math.abs(newWidth - lastGridWidth) < 10) {
+                    return;
+                }
+
+                lastGridWidth = newWidth;
+
+                // Debounce to avoid excessive re-renders during image loading
+                clearTimeout(resizeDebounceTimer);
+                resizeDebounceTimer = setTimeout(() => {
+                    virtualGridState.cardHeight = 0;
+                    virtualGridState.lastKey = '';
+                    scheduleVirtualGridUpdate(true);
+                }, 300); // Increased from 150ms to 300ms
             });
             virtualGridState.resizeObserver.observe(grid);
         }
@@ -1404,6 +1479,7 @@
             const containerClass = typeof opts.containerClass === 'string' ? opts.containerClass : 'detail-image-group';
             const imageClass = typeof opts.imageClass === 'string' ? opts.imageClass : 'detail-image';
             const enableModal = opts.enableModal !== undefined ? Boolean(opts.enableModal) : true;
+            const eager = opts.eager !== undefined ? Boolean(opts.eager) : false;
             const group = document.createElement('div');
             group.className = containerClass;
             if (list.length === 0) return group;
@@ -1416,9 +1492,23 @@
 
             const img = document.createElement('img');
             img.className = imageClass;
-            img.loading = 'lazy';
+            img.loading = eager ? 'eager' : 'lazy';
             img.decoding = 'async';
             if (enableModal) img.dataset.modalType = type;
+
+            // Add error handling
+            img.onerror = () => {
+                img.style.display = 'none';
+                const fallback = document.createElement('div');
+                fallback.className = 'no-image';
+                fallback.textContent = 'Image Load Failed';
+                fallback.style.position = 'absolute';
+                fallback.style.inset = '0';
+                fallback.style.display = 'flex';
+                fallback.style.alignItems = 'center';
+                fallback.style.justifyContent = 'center';
+                frame.appendChild(fallback);
+            };
 
             const prevBtn = document.createElement('button');
             prevBtn.className = 'carousel-btn prev';
