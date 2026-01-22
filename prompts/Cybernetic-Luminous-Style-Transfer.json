@@ -8,8 +8,8 @@
   "prompt": "{\n  \"base_image\": \"uploaded image\",\n  \"style_transfer\": {\n    \"visual_characteristics\": {\n      \"head_and_face\": {\n        \"material\": \"translucent resin with embedded starlight and glowing neural circuits\",\n        \"surface_effect\": \"mirror-gloss with gold filament veins and galaxy-like reflections\",\n        \"lighting\": \"dynamic cinematic rim lights with volumetric glow\"\n      },\n      \"body_structure\": {\n        \"texture\": \"high-polish white ceramic with embedded gold wiring\",\n        \"design\": \"futuristic like organic plating\",\n        \"highlight_elements\": \"subtle internal light flows mimicking synaptic energy\"\n      },\n      \"motion_effect\": {\n        \"visual_glitch\": \"subtle horizontal motion blur on head edges\",\n        \"energy_flow\": \"faint pulsing particle lights across body\"\n      },\n      \"background\": {\n        \"type\": \"neutral gradient or dark void\",\n        \"focus\": \"emphasize figure's luminous contrast\"\n      }\n    },\n    \"application_target\": \"Replace surface and material style of uploaded image with the characteristics described above, while preserving the original pose, structure, and composition of the target image.\"\n  }\n}",
   "images": {
     "generated": [
-      "https://files.catbox.moe/qtwkhw.jpg",
-      "https://files.catbox.moe/pe2wuc.jpg"
+      "https://images2.imgbox.com/82/03/R3kbWO73_o.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769054056019_pe2wuc.jpg"
     ],
     "input": [],
     "example": [

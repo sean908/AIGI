@@ -7,8 +7,8 @@
   "prompt": "{\n  \"casting_log\": {\n    \"subject_archetype\": \"Pretty, fresh-faced beauty.\",\n    \"expression_control\": \"Capturing the 'perfect surprise' moment. Wide eyes, soft mouth.\"\n  },\n  \"execution_params\": {\n    \"aspect_ratio\": \"4:3\",\n    \"focus_point\": \"Eyes capturing the light\"\n  },\n  \"google_prompt\": \"A raw, intimate portrait taken indoors by a large window on a rainy day. A pretty East Asian woman in a simple white cotton slip dress is sitting on the windowsill. The photo captures the exact millisecond she turns her head from the window to look at the camera, hearing a sound. Her expression is one of **gentle, innocent surprise**, with wide eyes and slightly parted lips. Her hair is loosely tied and messy. The soft window light illuminates her face perfectly. The shot is sharp on her eyes, with a shallow depth of field. It feels like a stolen, beautiful moment.\"\n}",
   "images": {
     "generated": [
-      "https://files.catbox.moe/15n48c.jpg",
-      "https://files.catbox.moe/3ihf2k.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769054428994_15n48c.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769054434133_3ihf2k.jpg",
       "https://files.catbox.moe/tqo17o.jpg"
     ],
     "input": [],

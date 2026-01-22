@@ -5,9 +5,9 @@
   "prompt": "A powerful, high-contrast black-and-white side-profile portrait of a person (use reference photo,  Keep face of person 100% accurate from the reference image), with distinctly human yet timeless features emerging from complete darkness.\n\nThe composition is minimalist and sculptural, where form, light, and shadow define the subject rather than color or texture.\n\n(Subject is the person in the attached reference image)\n\nThe subject’s profile is clean and strong, contemplative expression  as if caught between thought and transcendence. They wear a dark, form-fitting turtleneck sweater that merges seamlessly into the black void, erasing all detail except the glowing edge of their silhouette.\n\nA single, narrow rim light  bright, sharp, and directional  carves out the shape of the head, neck, and shoulder, tracing the contours with precision. The light originates from directly behind and slightly above the subject, creating a thin, luminous halo along the jawline and curve of the skull, while the rest dissolves into pure black.\n\nThe background is absolute darkness, a void without texture or depth, emphasizing the luminous boundary between shadow and light.\n\nThere are no midtones, only the purest black and deliberate contrast with the brightest whites  heightening drama and abstraction.\n\nMood & Aesthetic: Minimalist, conceptual, and deeply introspective. Evokes solitude, contemplation, and timeless elegance. Feels cinematic yet intimate  an exploration of identity through light.\n\nTechnical details:\n\nShot with a telephoto lens for compressed perspective\n\nAperture: wide open (f/1.8–2.8) to achieve glowing contour and shallow depth of field\n\nLighting: front face with good highlight balance\n\nRendering: ultra-realistic 8K cinematic quality, true lens physics, depth of field, subtle film grain",
   "images": {
     "generated": [
-      "https://files.catbox.moe/7jm5al.jpg"
+      "https://tubed.2088.eu.org/file/AIGI/1769056018461_7jm5al.jpg"
     ],
-    "input": ["https://files.catbox.moe/b5of7z.png"],
+    "input": ["https://tubed.2088.eu.org/file/AIGI/1769059022176_b5of7z.png"],
     "example": ["https://files.catbox.moe/pu33pa.jpg", "https://files.catbox.moe/x7k8ma.jpg"]
   },
   "note": "twitter/NanoBanana_labs/1989802091682926775"
