@@ -14,6 +14,7 @@
             --header-bg: rgba(255, 255, 255, 0.8);
             --surface: #f5f5f7;
             --surface-hover: #e8e8ed;
+            --shimmer-highlight: rgba(255, 255, 255, 0.9);
             --text-primary: #1d1d1f;
             --text-secondary: #86868b;
             --accent: #0071e3;
@@ -34,6 +35,7 @@
                 --header-bg: rgba(0, 0, 0, 0.8);
                 --surface: #1c1c1e;
                 --surface-hover: #2c2c2e;
+                --shimmer-highlight: rgba(255, 255, 255, 0.22);
                 --text-primary: #f5f5f7;
                 --text-secondary: #86868b;
                 --accent: #2997ff;
@@ -330,6 +332,52 @@
             overflow: hidden;
         }
 
+        @keyframes shimmer {
+            from { transform: translate3d(-120%, 0, 0); }
+            to { transform: translate3d(120%, 0, 0); }
+        }
+
+        .image-container.is-loading,
+        .image-frame.is-loading {
+            background: var(--surface);
+        }
+
+        .image-container.is-loading::before,
+        .image-frame.is-loading::before,
+        .modal-body.is-loading::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background-image: linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0) 40%,
+                var(--shimmer-highlight) 50%,
+                rgba(255, 255, 255, 0) 60%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: translate3d(-120%, 0, 0);
+            animation: shimmer 1.5s linear infinite;
+            will-change: transform;
+            pointer-events: none;
+        }
+
+        .image-container.is-loading img,
+        .image-frame.is-loading img,
+        .modal-body.is-loading img {
+            opacity: 0;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .image-container.is-loading::before,
+            .image-frame.is-loading::before,
+            .modal-body.is-loading::before {
+                animation: none;
+                transform: none;
+            }
+        }
+
         .card-image {
             width: 100%;
             height: 100%;
@@ -358,6 +406,7 @@
         .no-image {
             width: 100%;
             height: 100%;
+            background: var(--surface);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -776,6 +825,8 @@
         const allTags = new Set();
         let activeDetailPrompt = null;
         let modalState = { type: '', urls: [], index: 0 };
+        let modalImageLoadingInitialized = false;
+        let modalFallback = null;
         const detailCache = new Map();
         const detailInFlight = new Map();
         let activeDetailRequestToken = 0;
@@ -794,6 +845,31 @@
         const modalNext = document.getElementById('modalNext');
         const modalCounter = document.getElementById('modalCounter');
         const langToggleBtn = document.getElementById('langToggleBtn');
+        const modalBody = modalImage ? modalImage.parentElement : null;
+        const modalControls = modalBody ? modalBody.querySelector('.modal-controls') : null;
+
+        if (modalImage && modalBody) {
+            modalImage.addEventListener('error', () => {
+                modalBody.classList.remove('is-loading');
+                modalImage.style.display = 'none';
+                if (modalFallback) return;
+                modalFallback = document.createElement('div');
+                modalFallback.className = 'no-image';
+                modalFallback.textContent = 'Image Load Failed';
+                modalFallback.style.position = 'absolute';
+                modalFallback.style.inset = '0';
+                modalFallback.style.borderRadius = 'inherit';
+                modalFallback.style.background = 'rgba(0, 0, 0, 0.25)';
+                modalFallback.style.display = 'flex';
+                modalFallback.style.alignItems = 'center';
+                modalFallback.style.justifyContent = 'center';
+                if (modalControls) {
+                    modalBody.insertBefore(modalFallback, modalControls);
+                } else {
+                    modalBody.appendChild(modalFallback);
+                }
+            });
+        }
 
         function updateLangToggleUi() {
             if (!langToggleBtn) return;
@@ -1098,6 +1174,11 @@
         function filterAndRender() {
             const searchTerm = searchInput.value.toLowerCase();
             const selectedKey = selectedTag ? normalizeTag(selectedTag) : null;
+            const filterKey = [currentLang, selectedKey || '', searchTerm].join('|');
+            if (filterKey !== virtualGridState.filterKey) {
+                virtualGridState.filterKey = filterKey;
+                virtualGridState.cardCache.clear();
+            }
 
             filteredPrompts = allPrompts.filter(prompt => {
                 const title = String(prompt.title || '').toLowerCase();
@@ -1140,7 +1221,7 @@
 
             const card = document.createElement('div');
             card.className = 'card';
-            card.dataset.promptId = prompt.id;
+            card.dataset.promptId = String(prompt.id ?? '');
 
             const imageContainer = document.createElement('div');
             imageContainer.className = 'image-container';
@@ -1156,19 +1237,22 @@
             } else if (coverUrl) {
                 const img = document.createElement('img');
                 img.className = 'card-image';
-                img.src = coverUrl;
                 img.alt = String(prompt.title || '');
                 // First screen images load eagerly, others lazy
                 img.loading = isFirstScreen ? 'eager' : 'lazy';
                 img.decoding = 'async';
-                // Add error handling
-                img.onerror = () => {
+                let fallback = null;
+                img.addEventListener('error', () => {
+                    imageContainer.classList.remove('is-loading');
                     img.style.display = 'none';
-                    const fallback = document.createElement('div');
+                    if (fallback) return;
+                    fallback = document.createElement('div');
                     fallback.className = 'no-image';
                     fallback.textContent = 'Image Load Failed';
                     imageContainer.appendChild(fallback);
-                };
+                });
+                img.src = coverUrl;
+                setupImageLoading(imageContainer, img);
                 imageContainer.appendChild(img);
             } else {
                 const noImage = document.createElement('div');
@@ -1220,8 +1304,41 @@
             lastKey: '',
             rafId: 0,
             pendingForce: false,
-            resizeObserver: null
+            resizeObserver: null,
+            cardCache: new Map(),
+            maxCachedCards: 0,
+            filterKey: ''
         };
+
+        function getOrCreateCard(prompt, isFirstScreen) {
+            const id = String(prompt.id ?? '');
+            if (id) {
+                const cached = virtualGridState.cardCache.get(id);
+                if (cached) {
+                    // Refresh insertion order so Map iteration order matches LRU.
+                    virtualGridState.cardCache.delete(id);
+                    virtualGridState.cardCache.set(id, cached);
+                    return cached;
+                }
+            }
+
+            const card = createCardElement(prompt, isFirstScreen);
+            if (id) virtualGridState.cardCache.set(id, card);
+            return card;
+        }
+
+        function evictCardCache() {
+            const limit = virtualGridState.maxCachedCards;
+            if (!Number.isFinite(limit) || limit <= 0) return;
+
+            const cache = virtualGridState.cardCache;
+            while (cache.size > limit) {
+                const lruId = cache.keys().next().value;
+                const el = cache.get(lruId);
+                cache.delete(lruId);
+                if (el && el.parentNode) el.parentNode.removeChild(el);
+            }
+        }
 
         function parsePx(value) {
             const n = Number.parseFloat(value);
@@ -1320,6 +1437,9 @@
                 bufferRows
             );
 
+            const renderedCount = range.endIndex - range.startIndex;
+            virtualGridState.maxCachedCards = Math.max(columns * bufferRows * 3, renderedCount * 3);
+
             const topRows = range.startRow;
             const bottomRows = range.totalRows - range.endRow - 1;
 
@@ -1366,11 +1486,12 @@
             const firstScreenCount = columns * 2;
             for (let i = range.startIndex; i < range.endIndex; i += 1) {
                 const isFirstScreen = i < firstScreenCount;
-                fragment.appendChild(createCardElement(filteredPrompts[i], isFirstScreen));
+                fragment.appendChild(getOrCreateCard(filteredPrompts[i], isFirstScreen));
             }
 
             fragment.appendChild(bottomSpacer);
             grid.replaceChildren(fragment);
+            evictCardCache();
 
             if (force || virtualGridState.cardHeight <= 0) {
                 // Measure after layout settles; if the estimate was off, rerender once.
@@ -1472,6 +1593,76 @@
             filterAndRender();
         });
 
+        const imageLoadingCleanupByImg = new WeakMap();
+
+        function setupImageLoading(container, img) {
+            if (!container || !container.classList || !img || typeof img.addEventListener !== 'function') return () => {};
+
+            const previousCleanup = imageLoadingCleanupByImg.get(img);
+            if (typeof previousCleanup === 'function') previousCleanup();
+
+            // Fast path: if the image is already decoded/available, don't show the loading shimmer.
+            const initiallyLoaded = img.complete && img.naturalWidth > 0;
+            if (initiallyLoaded) container.classList.remove('is-loading');
+
+            let disposed = false;
+            let token = 0;
+            let onLoad = null;
+            let onError = null;
+
+            const clearListeners = () => {
+                if (onLoad) img.removeEventListener('load', onLoad);
+                if (onError) img.removeEventListener('error', onError);
+                onLoad = null;
+                onError = null;
+            };
+
+            const finish = (expectedToken) => {
+                if (disposed) return;
+                if (expectedToken !== token) return;
+                container.classList.remove('is-loading');
+                clearListeners();
+            };
+
+            const start = () => {
+                if (disposed) return;
+                if (img.complete && img.naturalWidth > 0) {
+                    container.classList.remove('is-loading');
+                    clearListeners();
+                    return;
+                }
+                token += 1;
+                const currentToken = token;
+                container.classList.add('is-loading');
+                clearListeners();
+
+                onLoad = () => finish(currentToken);
+                onError = () => finish(currentToken);
+                img.addEventListener('load', onLoad);
+                img.addEventListener('error', onError);
+
+                // Cached images (including cached failures) may not reliably emit new events.
+                if (img.complete) finish(currentToken);
+            };
+
+            const observer = new MutationObserver(start);
+            observer.observe(img, { attributes: true, attributeFilter: ['src', 'srcset'] });
+
+            if (!initiallyLoaded) start();
+
+            const cleanup = () => {
+                if (disposed) return;
+                disposed = true;
+                observer.disconnect();
+                clearListeners();
+                container.classList.remove('is-loading');
+                imageLoadingCleanupByImg.delete(img);
+            };
+
+            imageLoadingCleanupByImg.set(img, cleanup);
+            return cleanup;
+        }
+
         // Detail rendering
         function renderImageGroup(urls, type, altPrefix, options) {
             const list = Array.isArray(urls) ? urls.filter(Boolean) : [];
@@ -1489,6 +1680,7 @@
             group.appendChild(frame);
 
             let currentIndex = 0;
+            let fallback = null;
 
             const img = document.createElement('img');
             img.className = imageClass;
@@ -1498,8 +1690,10 @@
 
             // Add error handling
             img.onerror = () => {
+                frame.classList.remove('is-loading');
                 img.style.display = 'none';
-                const fallback = document.createElement('div');
+                if (fallback) return;
+                fallback = document.createElement('div');
                 fallback.className = 'no-image';
                 fallback.textContent = 'Image Load Failed';
                 fallback.style.position = 'absolute';
@@ -1526,6 +1720,11 @@
             counter.className = 'carousel-counter';
 
             const update = () => {
+                if (fallback) {
+                    fallback.remove();
+                    fallback = null;
+                    img.style.display = '';
+                }
                 const total = list.length;
                 const safeIndex = ((currentIndex % total) + total) % total;
                 currentIndex = safeIndex;
@@ -1565,6 +1764,7 @@
             frame.appendChild(nextBtn);
             frame.appendChild(counter);
             update();
+            setupImageLoading(frame, img);
             return group;
         }
 
@@ -1590,6 +1790,12 @@
         function closeModal() {
             imageModal.hidden = true;
             modalState = { type: '', urls: [], index: 0 };
+            if (modalFallback) {
+                modalFallback.remove();
+                modalFallback = null;
+            }
+            if (modalBody) modalBody.classList.remove('is-loading');
+            if (modalImage) modalImage.style.display = '';
             document.body.style.overflow = '';
         }
 
@@ -1599,7 +1805,18 @@
             if (total === 0) return;
             const safeIndex = ((index % total) + total) % total;
             modalState.index = safeIndex;
+            if (modalFallback) {
+                modalFallback.remove();
+                modalFallback = null;
+                modalImage.style.display = '';
+            }
             modalImage.src = urls[safeIndex];
+            if (!modalImageLoadingInitialized) {
+                if (modalBody) {
+                    setupImageLoading(modalBody, modalImage);
+                    modalImageLoadingInitialized = true;
+                }
+            }
             modalCounter.textContent = `${safeIndex + 1} / ${total}`;
             const hideNav = total <= 1;
             modalPrev.hidden = hideNav;
