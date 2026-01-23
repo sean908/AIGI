@@ -847,6 +847,10 @@
         const langToggleBtn = document.getElementById('langToggleBtn');
         const modalBody = modalImage ? modalImage.parentElement : null;
         const modalControls = modalBody ? modalBody.querySelector('.modal-controls') : null;
+        const headerEl = document.querySelector('header');
+
+        const LIST_SCROLL_RESTORE_Y_KEY = 'aigi-list-scroll-y';
+        const LIST_SCROLL_RESTORE_PROMPT_ID_KEY = 'aigi-list-scroll-prompt-id';
 
         if (modalImage && modalBody) {
             modalImage.addEventListener('error', () => {
@@ -1572,8 +1576,85 @@
             if (!card) return;
             const id = card.dataset.promptId;
             if (!id) return;
+            saveListScrollRestoreState(id);
             location.hash = `#/detail/${encodeURIComponent(id)}`;
         });
+
+        function saveListScrollRestoreState(promptId) {
+            const id = String(promptId || '');
+            if (!id) return;
+            try {
+                sessionStorage.setItem(LIST_SCROLL_RESTORE_PROMPT_ID_KEY, id);
+                sessionStorage.setItem(LIST_SCROLL_RESTORE_Y_KEY, String(window.scrollY || 0));
+            } catch (error) {
+                // sessionStorage may be blocked; ignore.
+            }
+        }
+
+        function restoreListScrollIfNeeded() {
+            let promptId = '';
+            let fallbackY = 0;
+            try {
+                promptId = sessionStorage.getItem(LIST_SCROLL_RESTORE_PROMPT_ID_KEY) || '';
+                fallbackY = Number.parseFloat(sessionStorage.getItem(LIST_SCROLL_RESTORE_Y_KEY) || '0');
+            } catch (error) {
+                return;
+            }
+
+            const clear = () => {
+                try {
+                    sessionStorage.removeItem(LIST_SCROLL_RESTORE_PROMPT_ID_KEY);
+                    sessionStorage.removeItem(LIST_SCROLL_RESTORE_Y_KEY);
+                } catch (error) {
+                    // Ignore.
+                }
+            };
+
+            if (!promptId) return;
+            if (!Number.isFinite(fallbackY) || fallbackY < 0) fallbackY = 0;
+
+            const targetIndex = filteredPrompts.findIndex(prompt => String(prompt.id ?? '') === promptId);
+            if (targetIndex < 0) {
+                window.scrollTo(0, fallbackY);
+                clear();
+                return;
+            }
+
+            // Avoid a pre-scroll "guess" here; we only scroll once after we can
+            // locate the exact card to prevent visible jumpiness.
+            scheduleVirtualGridUpdate(true);
+
+            const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 0;
+            const headerOffset = Math.max(0, Math.round(headerHeight) + 12);
+
+            const getRenderedCard = () => {
+                const cards = grid.querySelectorAll('.card');
+                for (const card of cards) {
+                    if (card && card.dataset && card.dataset.promptId === promptId) return card;
+                }
+                return null;
+            };
+
+            const align = (attemptsLeft) => {
+                if (listPage.hidden) return;
+                const card = getRenderedCard();
+                if (card) {
+                    const top = card.getBoundingClientRect().top + window.scrollY;
+                    window.scrollTo(0, Math.max(0, Math.round(top - headerOffset)));
+                    clear();
+                    return;
+                }
+                if (attemptsLeft <= 0) {
+                    window.scrollTo(0, fallbackY);
+                    clear();
+                    return;
+                }
+                scheduleVirtualGridUpdate(true);
+                requestAnimationFrame(() => align(attemptsLeft - 1));
+            };
+
+            requestAnimationFrame(() => align(12));
+        }
 
         // Search input
         searchInput.addEventListener('input', () => {
@@ -2031,9 +2112,11 @@
             activeDetailPrompt = null;
             closeModal();
             filterAndRender();
+            restoreListScrollIfNeeded();
         }
 
         function showDetailPage(id) {
+            window.scrollTo(0, 0);
             listPage.hidden = true;
             detailPage.hidden = false;
             closeModal();
