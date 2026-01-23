@@ -1,0 +1,20 @@
+{
+  "id": "Backlit-Allure-The-Dreamy-Morning-Stretch",
+  "title": "晨光下的窗边慵懒伸展",
+  "tags": [
+    "人像"
+  ],
+  "prompt": "{\n  \"strategic_analysis\": {\n    \"subject_styling\": \"保留原图的白衬衫与灰色包臀裙。通过双手举过头顶伸懒腰的动作，自然地提起衬衫下摆，露出腰部曲线，同时强调胸部轮廓。\",\n    \"mode_logic\": \"Mode C (Slice-of-Life) - 强调身体在环境光下的剪影与线条美。\"\n  },\n  \"execution_params\": {\n    \"aspect_ratio\": \"3:4\",\n    \"text_injection\": \"None\"\n  },\n  \"avoidance_guidelines\": \"Avoid stiff poses. The stretch should look natural and fluid, like a cat.\",\n  \"google_prompt\": \"Full body shot. The stunning young Asian woman from the reference image, wearing the same loose white button-down shirt (unbuttoned deeply) and tight grey mini-skirt. She is standing by a floor-to-ceiling office window, stretching her arms high above her head in a lazy, cat-like stretch. The motion lifts her shirt slightly, revealing her tiny waist and accentuating her hourglass figure and hip curve. Sunlight floods in from behind (backlit), making the white shirt semi-translucent. She looks at the camera with a heavy-lidded, alluring smile. High-key exposure, airy atmosphere. Pentax 67, Kodak Portra 400. Dreamy, soft focus.\"\n}",
+  "images": {
+    "generated": [
+      "https://tubed.2088.eu.org/file/AIGI/1769132397491_晨光慵懒伸展.jpg",
+      "https://images2.imgbox.com/52/32/eMAgM3lc_o.jpg",
+      "https://images2.imgbox.com/fe/e2/3KvfbozG_o.jpg"
+    ],
+    "input": [],
+    "example": [
+      "https://files.catbox.moe/c140tf.jpg"
+    ]
+  },
+  "note": "Grok, Input[Optional]\nNano Banana Pro failed :'(\nX/AYi_AInotes/2014002985790267590"
+}

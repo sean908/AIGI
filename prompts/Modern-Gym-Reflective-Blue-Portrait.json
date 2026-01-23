@@ -1,0 +1,19 @@
+{
+  "id": "Modern-Gym-Reflective-Blue-Portrait",
+  "title": "健身房的忧郁色自拍",
+  "tags": [
+    "人像"
+  ],
+  "prompt": "{\n\n\"composition\": {\n\"layout\": \"Vertical mirror selfie, subject off-center right.\",\n\"perspective\": \"Eye-level, reflection.\",\n\"framing\": \"Framed by weight rack on the left, windows in the background.\"\n},\n\"lighting\": {\n\"source\": \"Natural daylight from large windows, soft and diffused.\",\n\"mood\": \"Cool, slightly dim, moody.\"\n},\n\"typography\": {\n\"text_content\": null,\n\"font_style\": null,\n\"placement\": null\n},\n\"effects\": {\n\"textures\": \"Metal weight plates, fabric clothing, rubber flooring, glass.\",\n\"filters\": \"Slightly soft, cool color grading.\"\n},\n\"colors\": [\n\"#2A2F45\",\n\"#E8E9F0\",\n\"#1C1F2A\",\n\"#898C99\",\n\"#4D5365\",\n\"#F0E0D0\"\n],\n\"master_prompt\": \"A vertical mirror selfie photograph taken in a modern gym. A woman with long dark hair, wearing a light blue patterned sports bra and dark blue high-waisted leggings, holds a smartphone to take a photo of herself in a large mirror. She is leaning against a weight rack with plates. The background features large windows showing a blue-toned outdoor view, with other gym equipment visible. The lighting is soft, cool daylight from the windows, creating a moody atmosphere. The textures include metal, fabric, and rubber.\"\n}",
+  "images": {
+    "generated": [
+      "https://tubed.2088.eu.org/file/AIGI/1769067665444_1769067574486_download.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769067666362_1769067621202_download.jpg"
+    ],
+    "input": [],
+    "example": [
+      "https://files.catbox.moe/yxshhv.jpg"
+    ]
+  },
+  "note": "X/joshesye/2012049987157574015\n可 图生图"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "Elegant-Allure-Seductive-OL",
+  "title": "感性职场丽人",
+  "tags": [
+    "人像"
+  ],
+  "prompt": "{\n  \"prompt_data\": {\n    \"subject\": {\n      \"basics\": \"1girl, solo\",\n      \"demographics\": \"Stunning 20s Asian female idol style, tall fashion model proportions\",\n      \"hair\": \"Very long straight black hair with full bangs\",\n      \"eyes\": \"Large, round, piercing eyes\",\n      \"skin\": \"Flawless pale skin\",\n      \"expression\": \"Cute yet seductive expression looking at viewer\"\n    },\n    \"attire\": {\n      \"main_outfit\": {\n        \"item\": \"Seductive Office Lady uniform\",\n        \"details\": [\n          \"Tight white button-up shirt\",\n          \"Black micro-miniskirt\",\n          \"Skirt hem cut extremely high\",\n          \"Professional yet alluring silhouette\"\n        ],\n        \"branding\": \"None\"\n      },\n      \"legwear\": [\n        \"Sheer dark blue thigh-high stockings\",\n        \"Intricate floral lace pattern on stockings\",\n        \"Dark blue lace garter belt with suspenders\"\n      ]\n    },\n    \"accessories\": {\n      \"style\": \"Luxurious gold accessories\",\n      \"items\": [\n        \"Slim gold watch\",\n        \"Delicate gold chain necklace with ruby pendant\",\n        \"Long gold chain earrings\"\n      ]\n    },\n    \"pose_and_action\": {\n      \"posture\": \"Sitting gracefully on the edge of an office desk\",\n      \"interaction\": \"Legs crossed elegantly\"\n    },\n    \"environment\": {\n      \"setting\": \"Modern high-end corporate office interior\",\n      \"background_elements\": \"Blurred city skyline through floor-to-ceiling glass windows, sleek office furniture\"\n    },\n    \"style_and_technical\": [\n      \"Subtle shadows\",\n      \"Cinematic soft lighting\",\n      \"Highly detailed face and eyes\",\n      \"Realistic materials\",\n      \"Photorealistic\",\n      \"Sharp focus\",\n      \"8k\",\n      \"3:4\"\n    ]\n  }\n}",
+  "images": {
+    "generated": [
+      "https://tubed.2088.eu.org/file/AIGI/1769153443483_1769153418129_download.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769153198678_1769153106756_download.jpg",
+      "https://images2.imgbox.com/d6/5a/gsx38VVJ_o.jpg",
+      "https://images2.imgbox.com/e9/46/3RfD3p9g_o.jpg"
+    ],
+    "input": [],
+    "example": [
+      "https://images2.imgbox.com/13/7c/vLIOaacY_o.jpg",
+      "https://images2.imgbox.com/49/b1/FtN0a4Ka_o.jpg"
+    ]
+  },
+  "note": "可 图生图, Nano Banana Pro 有点认图\nX/BeautyVerse_Lab/2013787423134884005\nX/joshesye/2013966129853813084"
+}

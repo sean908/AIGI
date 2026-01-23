@@ -1,0 +1,19 @@
+{
+  "id": "Dreamy-Chaos-GrainyFur-and-Glasses-Extreme-Close-up",
+  "title": "毛绒着装下的金丝眼镜特写",
+  "tags": [
+    "人像",
+    "图生图"
+  ],
+  "prompt": "{\n  \"portrait_prompt\": {\n    \"subject\": \"Based on <User Portrait>, extreme close-up 'in-your-face' shot, face completely framed and surrounded by voluminous chaotic white faux fur and messy blonde hair, wearing thin gold wire-rimmed glasses with reflections, large abstract silver metallic earring, relaxed expression with lips slightly parted, soft gaze\",\n    \"composition\": \"heavy film grain, high ISO grain, Extreme close-up (ECU), 28mm wide-angle lens, slight barrel distortion emphasizing facial features, diagonal or inverted orientation, face filling the entire frame, shallow depth of field with blurry foreground fur\",\n    \"camera_angle\": \"Top-down view or extremely close eye-level, intimate proximity\",\n    \"lighting\": \"Soft diffused frontal light, dreamlike haze (Pro-Mist filter effect), gentle highlights on skin and glasses, low contrast shadows\",\n    \"color_palette\": \"Warm beige, cream, soft browns, vintage film aesthetic, heavy film grain, desaturated warm tones, lo-fi 90s magazine style\",\n    \"mood\": \"Intimate, dreamy, stylishly chaotic, textured, candid, nostalgic, soft focus\",\n    \"negative_prompt\": \"Unrealistic features, anatomical errors, stiff pose, over-processed, harsh lighting, blurry eyes, low resolution, bad composition, distorted faces, unnatural colors, extra limbs, watermark, text, sharp digital look\"\n  }\n}",
+  "images": {
+    "generated": [
+      "https://tubed.2088.eu.org/file/AIGI/1769152502893_1769152398631_download.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769152502340_1769152407484_download.jpg"
+    ],
+    "input": [],
+    "example": [
+      "https://tubed.2088.eu.org/file/AIGI/1769152458351_1768890888514-o7c8y8-full.jpg"
+    ]
+  }
+}
