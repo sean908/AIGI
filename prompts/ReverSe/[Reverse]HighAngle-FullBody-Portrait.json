@@ -1,0 +1,23 @@
+{
+  "id": "HighAngle-FullBody-Portrait",
+  "title": "高角度俯拍全身肖像",
+  "tags": [
+    "人像",
+    "逆向"
+  ],
+  "prompt": "Maybe Later",
+  "images": {
+    "generated": [
+      "https://tubed.2088.eu.org/file/AIGI/1769395544365_1769395491809_download.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769395578805_1769395483915_download.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769395580818_1769395499586_download.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769399076208_1769398776624_download.jpg"
+    ],
+    "input": [],
+    "example": [
+      "https://files.catbox.moe/ocibwk.jpg",
+      "https://files.catbox.moe/6utzeq.jpg"
+    ]
+  },
+  "note": "X/MANISH1027512/2015386434010788086"
+}

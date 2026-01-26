@@ -1,4 +1,9 @@
 {
+  "reverse": {
+    "en": "Reverse",
+    "zh": "逆向",
+    "aliases": ["逆向", "reverse"]
+  },
   "cyberpunk": {
     "en": "Cyberpunk",
     "zh": "赛博朋克",
