@@ -89,18 +89,14 @@ jobs:
           for (const name of entries) {
             const fullPath = path.join(promptsDir, name);
             const raw = fs.readFileSync(fullPath, 'utf8');
-            let data;
             try {
-              data = JSON.parse(raw);
+              JSON.parse(raw); // Validate JSON syntax only
             } catch (err) {
               throw new Error(`Invalid JSON in ${name}: ${err.message}`);
             }
 
-            const fallbackId = name.replace(/\.json$/i, '');
-            const id =
-              data && typeof data.id === 'string' && data.id.trim()
-                ? data.id.trim()
-                : fallbackId;
+            // Always derive id from file path (ignore any id field in JSON)
+            const id = name.replace(/\.json$/i, '');
 
             if (seenIds.has(id)) {
               throw new Error(`Duplicate prompt id "${id}"`);
@@ -128,7 +124,7 @@ jobs:
           from typing import Any
 
 
-          EXCLUDED_FILENAMES = {"index.json", "aggregated.json", "prompts.json"}
+          EXCLUDED_FILENAMES = {"index.json", "aggregated.json", "summary.json", "prompts.json"}
 
 
           class AggregationError(Exception):
@@ -172,11 +168,17 @@ jobs:
               return val
 
 
-          def _normalize_prompt(data: Any, source: Path) -> dict[str, Any]:
+          def _expected_id_for_path(prompts_dir: Path, path: Path) -> str:
+              rel = path.relative_to(prompts_dir).with_suffix("")
+              return str(rel).replace("\\", "/")
+
+
+          def _normalize_prompt(data: Any, *, source: Path, prompts_dir: Path) -> dict[str, Any]:
               if not isinstance(data, dict):
                   raise AggregationError(f"{source}: expected a JSON object at top-level")
 
-              prompt_id = _require_nonempty_str(data, "id", source)
+              # Always derive id from file path (ignore any id field in JSON)
+              prompt_id = _expected_id_for_path(prompts_dir, source)
               title = _require_nonempty_str(data, "title", source)
               prompt = _require_nonempty_str(data, "prompt", source)
 
@@ -217,7 +219,7 @@ jobs:
               seen_ids: set[str] = set()
 
               for path in files:
-                  normalized = _normalize_prompt(_load_json_file(path), path)
+                  normalized = _normalize_prompt(_load_json_file(path), source=path, prompts_dir=prompts_dir)
                   pid = normalized["id"]
                   if pid in seen_ids:
                       raise AggregationError(f"duplicate prompt id {pid!r}")
@@ -369,12 +371,8 @@ jobs:
               if not isinstance(data, dict):
                   raise SummaryBuildError(f"{source}: expected a JSON object at top-level")
 
-              prompt_id = _require_nonempty_str(data, "id", source)
-              expected_id = _expected_id_for_path(prompts_dir, source)
-              if prompt_id != expected_id:
-                  raise SummaryBuildError(
-                      f"{source}: id {prompt_id!r} does not match expected {expected_id!r}"
-                  )
+              # Always derive id from file path (ignore any id field in JSON)
+              prompt_id = _expected_id_for_path(prompts_dir, source)
 
               title = _require_nonempty_str(data, "title", source)
 
