@@ -2029,15 +2029,19 @@
             const copyBtn = document.createElement('button');
             copyBtn.className = 'copy-btn';
             copyBtn.type = 'button';
-            copyBtn.textContent = '复制';
+            const copyI18n = () => currentLang === 'zh'
+                ? { idle: '复制', ok: '已复制', fail: '失败' }
+                : { idle: 'COPY', ok: 'COPIED', fail: 'FAILED' };
+            copyBtn.textContent = copyI18n().idle;
             copyBtn.addEventListener('click', async () => {
+                const t = copyI18n();
                 try {
                     const ok = await copyToClipboard(prompt.prompt);
-                    copyBtn.textContent = ok ? '已复制' : '失败';
+                    copyBtn.textContent = ok ? t.ok : t.fail;
                 } catch {
-                    copyBtn.textContent = '失败';
+                    copyBtn.textContent = t.fail;
                 }
-                setTimeout(() => { copyBtn.textContent = '复制'; }, 900);
+                setTimeout(() => { copyBtn.textContent = copyI18n().idle; }, 900);
             });
 
             const promptText = document.createElement('div');
