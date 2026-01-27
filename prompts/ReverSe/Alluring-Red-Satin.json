@@ -1,0 +1,29 @@
+{
+  "id": "Alluring-Red-Satin",
+  "title": "魅惑红缎",
+  "tags": [
+    "人像",
+    "逆向"
+  ],
+  "prompt": "Maybe Later",
+  "images": {
+    "generated": [
+      "https://tubed.2088.eu.org/file/AIGI/1769480100321_1769480020212_download.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769480110849_1769480014056_download.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769480124130_1769480006585_download.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769480162712_1769479998174_download.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769480173698_1769479982162_download.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769480191595_1769479968127_download.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769480198134_1769479960794_download.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769480213408_1769479924642_download.jpg",
+      "https://images2.imgbox.com/13/23/Kx7UUmeX_o.jpg",
+      "https://images2.imgbox.com/fd/d1/VubGfvAx_o.jpg",
+      "https://images2.imgbox.com/c1/d5/9hXwvklp_o.jpg"
+    ],
+    "input": [],
+    "example": [
+      "https://files.catbox.moe/sgez3y.jpg"
+    ]
+  },
+  "note": "逆出来的Prompt无法 图生图, ε=( o｀ω′)ノ！！！"
+}

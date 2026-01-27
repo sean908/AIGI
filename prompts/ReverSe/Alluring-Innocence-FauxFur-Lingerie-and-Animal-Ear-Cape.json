@@ -1,0 +1,25 @@
+{
+  "id": "your-unique-id",
+  "title": "暖绒兽耳斗篷私房写真",
+  "tags": [
+    "人像",
+    "逆向"
+  ],
+  "prompt": "Maybe Later",
+  "images": {
+    "generated": [
+      "https://tubed.2088.eu.org/file/AIGI/1769499852830_1769499661977_download.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769499894726_1769499644985_download.jpg",
+      "https://images2.imgbox.com/eb/20/9nGFICdh_o.jpg",
+      "https://images2.imgbox.com/15/03/xJB4ikJl_o.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769500081800_ver12.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769500026528_ver7.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769500016608_ver6.jpg"
+    ],
+    "input": [],
+    "example": [
+      "https://files.catbox.moe/2xrxxg.jpg"
+    ]
+  },
+  "note": "依舊 圖生圖 不能！！"
+}
