@@ -1,0 +1,23 @@
+{
+  "id": "your-unique-id",
+  "title": "淡紫色高定礼服：薄纱、水晶与流光",
+  "tags": [
+    "人像"
+  ],
+  "prompt": "{\n  \"scene_configuration\": {\n    \"version\": \"2.0\",\n    \"global_aesthetic\": \"Cinematic Editorial Fashion\",\n    \"aspect_ratio\": \"3:4\",\n    \"image_quality\": \"Masterpiece, 8K, Photorealistic, Subsurface Scattering\"\n  },\n  \"subject_specification\": {\n    \"model\": \"The person I uploaded\",\n    \"physical_attributes\": {\n      \"hair\": {\n        \"color\": \"Deep espresso dark brown\",\n        \"texture\": \"Voluminous, thick waves, high-gloss shine\",\n        \"styling\": \"Cascading over left shoulder, Hollywood glamour style\"\n      },\n      \"complexion\": {\n        \"skin_type\": \"Dewy, luminous, fine pores visible\",\n        \"features\": \"Sharp jawline definition, elongated neck, soft sheen on collarbones\"\n      },\n      \"expression_and_pose\": {\n        \"body_pose\": \"Leaning forward toward the camera, subtle arch in the back\",\n        \"head_position\": \"Tilted back at a 15-degree angle, sensual posture\",\n        \"eye_direction\": \"Gazing upward into the light source\",\n        \"mouth\": \"Slightly parted, soft neutral lip tone\"\n      }\n    }\n  },\n  \"wardrobe_details\": {\n    \"garment_type\": \"High-fashion Couture Gown\",\n    \"color_palette\": {\n      \"primary\": \"Lavender\",\n      \"secondary\": \"Pale Lilac\",\n      \"accents\": \"Iridescent Silver\"\n    },\n    \"textile_physics\": {\n      \"bodice\": \"Sheer organza and silk tulle\",\n      \"embellishments\": \"High-density micro-sequins, hand-stitched glass beads, Swarovski crystal accents\",\n      \"visual_effects\": \"Refractive light play, shimmering texture, intricate embroidery patterns\"\n    },\n    \"structural_details\": [\"Delicate spaghetti straps\", \"Form-fitting silhouette\", \"Translucent layering\"]\n  },\n  \"environment_architecture\": {\n    \"setting\": \"Luxury Art-Deco Penthouse Interior\",\n    \"background_elements\": {\n      \"walls\": \"Vintage geometric art-deco wallpaper\",\n      \"colors\": [\"Muted taupe\", \"Cream\", \"Burnt umber\", \"Gold leaf accents\"],\n      \"depth\": \"Extreme bokeh, out-of-focus architectural depth\"\n    },\n    \"atmosphere\": \"Warm, sophisticated, intimate, slightly hazy\"\n  },\n  \"technical_direction\": {\n    \"camera_gear\": {\n      \"body\": \"Medium Format Digital (e.g., Hasselblad H6D)\",\n      \"lens\": \"85mm Prime G-Master\",\n      \"aperture\": \"f/1.2 for razor-thin depth of field\"\n    },\n    \"lighting_setup\": {\n      \"primary_light\": \"Warm-toned softbox (Key Light) at 45 degrees\",\n      \"secondary_light\": \"Cool-toned rim light to define the silhouette and hair\",\n      \"effects\": [\"Cinematic shadows\", \"Chiaroscuro contrast\", \"Specular highlights on dress beads\"]\n    },\n    \"post_processing\": {\n      \"color_grading\": \"Analog film aesthetic, slight teal-and-orange bias in shadows\",\n      \"focus_point\": \"Eye lashes and iris sharp; dress texture in mid-ground sharp\"\n    }\n  }\n}",
+  "images": {
+    "generated": [
+      "https://tubed.2088.eu.org/file/AIGI/1769573776604_1769573540673_download.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769573755780_1769573567214_download.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769573758286_1769573576442_download.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769573758153_1769573619374_download.jpg",
+      "https://images2.imgbox.com/cc/79/5i3pQi6h_o.jpg",
+      "https://images2.imgbox.com/19/c1/wKEjHC2w_o.jpg"
+    ],
+    "input": [],
+    "example": [
+      "https://pbs.twimg.com/media/G_rbrLFWIAAzTYJ?format=jpg&name=large"
+    ]
+  },
+  "note": "X/Adam38363368936/2016165338011045963"
+}

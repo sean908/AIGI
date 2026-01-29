@@ -1,0 +1,21 @@
+{
+  "id": "your-unique-id",
+  "title": "极简（扁平化）肖像",
+  "tags": [
+    "人像",
+    "图生图"
+  ],
+  "prompt": "绘制一个极简风格的角色，使用参考图的场景和人物，面部和身体特征简化且接近参考人物（仅使用点和线）。采用平涂色彩、柔和曲线，不添加纹理。角色姿势自然，居中，背景简洁。风格可爱、沉稳、视觉干净。",
+  "images": {
+    "generated": [
+      "https://tubed.2088.eu.org/file/AIGI/1769578343687_1769578293118_download.jpg",
+      "https://files.catbox.moe/j7jiwe.jpg",
+      "https://tubed.2088.eu.org/file/AIGI/1769578351354_1769578300604_download.jpg"
+    ],
+    "input": [],
+    "example": [
+      "https://pbs.twimg.com/media/G_t9AkhbAAAzNiq?format=jpg&name=large"
+    ]
+  },
+  "note": "X/Adam38363368936/2016343060855287863"
+}
