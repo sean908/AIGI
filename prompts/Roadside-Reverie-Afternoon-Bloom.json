@@ -1,0 +1,21 @@
+{
+  "id": "my-prompt-id",
+  "title": "路拍：蓝色碎花裙",
+  "tags": [
+    "人像"
+  ],
+  "prompt": "Photorealistic full-body shot of a beautiful 22-year-old Japanese woman with black hair in a low ponytail and bangs, wearing the same light-blue floral off-shoulder babydoll dress and beige strappy heels, sitting casually on a wide concrete barrier by the roadside, one hand resting on the stone, soft afternoon sunlight, blurred green trees and street in background, gentle smile looking at camera, realistic fabric movement, skin texture, natural outdoor lighting, shot on Sony A7R IV, 85mm, photorealistic 8k.",
+  "images": {
+    "generated": [
+      "https://tubed.2088.eu.org/file/1772008140557_img_9a65f169-aab3-5ff1-bcd9-5afb2331db63.jpg",
+      "https://tubed.2088.eu.org/file/1772008169883_img_799e1910-cb98-572b-835b-c278eca26c72.jpg",
+      "https://images2.imgbox.com/e0/0c/o0sT0sx4_o.jpg"
+    ],
+    "input": [],
+    "example": [
+      "https://files.catbox.moe/3uadag.jpg"
+    ]
+  },
+  "note": "BeautyVerse_Lab@X",
+  "pinned_position": 1
+}

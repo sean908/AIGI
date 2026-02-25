@@ -89,8 +89,9 @@ jobs:
           for (const name of entries) {
             const fullPath = path.join(promptsDir, name);
             const raw = fs.readFileSync(fullPath, 'utf8');
+            let data;
             try {
-              JSON.parse(raw); // Validate JSON syntax only
+              data = JSON.parse(raw);
             } catch (err) {
               throw new Error(`Invalid JSON in ${name}: ${err.message}`);
             }
@@ -103,12 +104,24 @@ jobs:
             }
             seenIds.add(id);
 
-            prompts.push({ id, file: name });
+            const pinnedPosition = typeof data.pinned_position === 'number' && Number.isFinite(data.pinned_position)
+              ? data.pinned_position : null;
+            prompts.push({ id, file: name, pinnedPosition });
           }
 
-          prompts.sort((a, b) => a.id.localeCompare(b.id) || a.file.localeCompare(b.file));
+          // Sort: pinned first (ascending), then unpinned (alphabetical by id)
+          prompts.sort((a, b) => {
+            const aHasPin = a.pinnedPosition !== null;
+            const bHasPin = b.pinnedPosition !== null;
+            if (aHasPin && !bHasPin) return -1;
+            if (!aHasPin && bHasPin) return 1;
+            if (aHasPin && bHasPin) {
+              if (a.pinnedPosition !== b.pinnedPosition) return a.pinnedPosition - b.pinnedPosition;
+            }
+            return a.id.localeCompare(b.id);
+          });
 
-          const out = JSON.stringify({ prompts }, null, 2) + '\n';
+          const out = JSON.stringify({ prompts: prompts.map(({id, file}) => ({id, file})) }, null, 2) + '\n';
           fs.writeFileSync(path.join(promptsDir, 'index.json'), out, 'utf8');
           NODE
 
@@ -200,7 +213,7 @@ jobs:
               if not isinstance(note, str):
                   raise AggregationError(f"{source}: field 'note' must be a string")
 
-              return {
+              result = {
                   "id": prompt_id,
                   "title": title,
                   "tags": tags,
@@ -208,6 +221,14 @@ jobs:
                   "images": images,
                   "note": note,
               }
+
+              # Preserve pinned_position if present and valid
+              pinned = data.get("pinned_position")
+              if pinned is not None:
+                  if isinstance(pinned, (int, float)) and not (pinned != pinned or pinned == float("inf") or pinned == float("-inf")):
+                      result["pinned_position"] = pinned
+
+              return result
 
 
           def build_aggregated_document(
@@ -226,7 +247,7 @@ jobs:
                   seen_ids.add(pid)
                   prompts.append(normalized)
 
-              prompts.sort(key=lambda p: p["id"])
+              prompts.sort(key=lambda p: (p.get("pinned_position") is None, p.get("pinned_position", float("inf")), p["id"]))
 
               return {
                   "schemaVersion": 2,
@@ -382,12 +403,20 @@ jobs:
 
               generated_images = _extract_generated_images(data, source)
 
-              return {
+              result = {
                   "id": prompt_id,
                   "title": title,
                   "tags": tags,
                   "generatedImages": generated_images,
               }
+
+              # Preserve pinned_position if present and valid
+              pinned = data.get("pinned_position")
+              if pinned is not None:
+                  if isinstance(pinned, (int, float)) and not (pinned != pinned or pinned == float("inf") or pinned == float("-inf")):
+                      result["pinned_position"] = pinned
+
+              return result
 
 
           def build_summary(prompts_dir: Path) -> list[dict[str, Any]]:
@@ -403,7 +432,7 @@ jobs:
                       )
                   )
 
-              out.sort(key=lambda p: p["id"])
+              out.sort(key=lambda p: (p.get("pinned_position") is None, p.get("pinned_position", float("inf")), p["id"]))
               return out
 
 
