@@ -1,0 +1,23 @@
+{
+  "id": "my-prompt-id",
+  "title": "野餐随拍",
+  "tags": [
+    "人像"
+  ],
+  "prompt": "Photorealistic depiction of a tender woman in her mid-20s, reclining on a picnic blanket in a sunny park, in a simple halter top and denim shorts that emphasize her natural curves, fiery red hair spread out like a halo, soft innocent eyes meeting the camera with a playful yet desirous pout, capturing a pure desire essence, vibrant grass and dappled sunlight on her glowing skin, high dynamic range, ultra-detailed, 8k cinematic photography.",
+  "images": {
+    "generated": [
+      "https://tubed.2088.eu.org/file/1772029921314_kelivo-1772029738765.jpg",
+      "https://files.catbox.moe/yyionq.jpg",
+      "https://tubed.2088.eu.org/file/1772029973723_kelivo-1772029054265.jpg",
+      "https://tubed.2088.eu.org/file/1772029968769_kelivo-1772028991933.jpg",
+      "https://tubed.2088.eu.org/file/1772029967603_kelivo-1772029012566.jpg",
+      "https://images2.imgbox.com/d6/3e/qazxqoYE_o.jpg"
+    ],
+    "input": [],
+    "example": [
+      "https://tubed.2088.eu.org/file/1772028948613_HB2lTx2awAA8AZU"
+    ]
+  },
+  "note": "BeautyVerse_Lab@X\n可图生图"
+}
