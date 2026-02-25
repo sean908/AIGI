@@ -853,12 +853,11 @@
         const LIST_SCROLL_RESTORE_PROMPT_ID_KEY = 'aigi-list-scroll-prompt-id';
         let isRestoringScroll = false;
         let lastScrollRestoreTime = 0;
-        let scrollRestoreRealignCallback = null;
 
         if (modalImage && modalBody) {
-            modalImage.addEventListener('error', () => {
-                modalBody.classList.remove('is-loading');
-                modalImage.style.display = 'none';
+	            modalImage.addEventListener('error', () => {
+	                modalBody.classList.remove('is-loading');
+	                modalImage.style.display = 'none';
                 if (modalFallback) return;
                 modalFallback = document.createElement('div');
                 modalFallback.className = 'no-image';
@@ -1183,8 +1182,16 @@
             const selectedKey = selectedTag ? normalizeTag(selectedTag) : null;
             const filterKey = [currentLang, selectedKey || '', searchTerm].join('|');
             if (filterKey !== virtualGridState.filterKey) {
+                const prevKey = virtualGridState.filterKey;
+                const prevLang = String(prevKey.split('|')[0] || '');
+                const langChanged = prevLang && prevLang !== currentLang;
+
                 virtualGridState.filterKey = filterKey;
                 virtualGridState.cardCache.clear();
+                if (langChanged) {
+                    virtualGridState.cardHeight = 0;
+                    virtualGridState.lastKey = '';
+                }
             }
 
             filteredPrompts = allPrompts.filter(prompt => {
@@ -1516,29 +1523,12 @@
 
                     virtualGridState.cardHeight = rounded;
 
-                    // Increase tolerance to 40px to reduce unnecessary re-renders
-                    // This covers image loading height changes and prevents oscillation
-                    if (prev > 0 && Math.abs(rounded - prev) < 40) return;
-
-                    // During scroll restoration: allow first height update to trigger re-render, then align
-                    if (isRestoringScroll && prev === 0) {
-                        virtualGridState.lastKey = '';
-                        scheduleVirtualGridUpdate(true);
-                        // Call align after re-render completes (only once)
-                        if (scrollRestoreRealignCallback) {
-                            const callback = scrollRestoreRealignCallback;
-                            scrollRestoreRealignCallback = null; // Clear to prevent duplicate calls
-                            requestAnimationFrame(() => {
-                                requestAnimationFrame(() => {
-                                    callback();
-                                });
-                            });
-                        }
-                        return;
-                    }
-
-                    // Skip re-render during scroll restoration to avoid jump
+                    // During scroll restoration: never re-render based on height changes.
                     if (isRestoringScroll) return;
+
+                    // Increase tolerance to 60px to reduce unnecessary re-renders
+                    // This covers image loading height changes and prevents oscillation
+                    if (prev > 0 && Math.abs(rounded - prev) < 60) return;
 
                     // Skip re-render if recently completed scroll restoration
                     const timeSinceRestore = Date.now() - lastScrollRestoreTime;
@@ -1588,6 +1578,7 @@
             let lastGridWidth = 0;
             virtualGridState.resizeObserver = new ResizeObserver((entries) => {
                 if (isRestoringScroll) return;
+                if (listPage.hidden) return;
 
                 // Only trigger on width changes (responsive layout), ignore height changes
                 const entry = entries[0];
@@ -1604,6 +1595,7 @@
                 // Debounce to avoid excessive re-renders during image loading
                 clearTimeout(virtualGridState.resizeDebounceTimer);
                 virtualGridState.resizeDebounceTimer = setTimeout(() => {
+                    if (listPage.hidden) return;
                     // Skip if recently completed scroll restoration
                     const timeSinceRestore = Date.now() - lastScrollRestoreTime;
                     if (timeSinceRestore < 3000) {
@@ -1665,7 +1657,7 @@
 
             const targetIndex = filteredPrompts.findIndex(prompt => String(prompt.id ?? '') === promptId);
             if (targetIndex < 0) {
-                window.scrollTo(0, fallbackY);
+                window.scrollTo({ top: fallbackY, behavior: 'instant' });
                 clear();
                 return;
             }
@@ -1679,61 +1671,28 @@
             const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 0;
             const headerOffset = Math.max(0, Math.round(headerHeight) + 12);
 
-            // Pre-scroll to approximate position to ensure virtual grid renders the target card
-            window.scrollTo(0, Math.max(0, fallbackY - 100));
-
-            const getRenderedCard = () => {
-                const cards = grid.querySelectorAll('.card');
-                for (const card of cards) {
-                    if (card && card.dataset && card.dataset.promptId === promptId) return card;
-                }
-                return null;
-            };
-
-            const align = (attemptsLeft) => {
-                if (listPage.hidden) {
-                    isRestoringScroll = false;
-                    scrollRestoreRealignCallback = null;
-                    return;
-                }
-                const card = getRenderedCard();
-                const currentScrollY = window.scrollY;
-                if (card) {
-                    const top = card.getBoundingClientRect().top + window.scrollY;
-                    const targetScrollY = Math.max(0, Math.round(top - headerOffset));
-                    window.scrollTo(0, targetScrollY);
-                    clear();
-                    scrollRestoreRealignCallback = null;
-                    isRestoringScroll = false;
-                    lastScrollRestoreTime = Date.now();
-                    return;
-                }
-                if (attemptsLeft <= 0) {
-                    window.scrollTo(0, fallbackY);
-                    clear();
-                    isRestoringScroll = false;
-                    scrollRestoreRealignCallback = null;
-                    return;
-                }
-                requestAnimationFrame(() => align(attemptsLeft - 1));
-            };
-
-            // Set realign callback for height measurement (used when cardHeight is 0)
-            scrollRestoreRealignCallback = () => align(12);
+            const columns = getGridColumns();
+            const rowGap = getGridRowGap();
+            const defaultEstimate = window.innerWidth <= 768 ? 270 : 320;
+            const estimatedCardHeight = virtualGridState.cardHeight > 0 ? virtualGridState.cardHeight : defaultEstimate;
+            const rowHeight = Math.max(1, estimatedCardHeight + rowGap);
+            const targetRow = Math.floor(targetIndex / Math.max(1, columns));
+            const gridTop = grid.getBoundingClientRect().top + window.scrollY;
+            const targetScrollY = Math.max(0, Math.round(gridTop + targetRow * rowHeight - headerOffset));
+            window.scrollTo({ top: targetScrollY, behavior: 'instant' });
 
             // Trigger initial render
             scheduleVirtualGridUpdate(true);
 
-            // If cardHeight is already known, align immediately after render
-            // Otherwise, wait for height measurement to trigger align via callback
-            if (virtualGridState.cardHeight > 0) {
-                scrollRestoreRealignCallback = null; // Clear callback since we're calling directly
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => align(12));
-                });
-            } else {
-                // align will be called from height measurement callback
-            }
+            requestAnimationFrame(() => {
+                if (listPage.hidden) {
+                    isRestoringScroll = false;
+                    return;
+                }
+                clear();
+                isRestoringScroll = false;
+                lastScrollRestoreTime = Date.now();
+            });
         }
 
         // Search input
@@ -2197,15 +2156,6 @@
             listPage.hidden = false;
             detailPage.hidden = true;
 
-            // 关键：unhide 后立即预滚动
-            let savedY = 0;
-            try {
-                savedY = Number.parseFloat(sessionStorage.getItem(LIST_SCROLL_RESTORE_Y_KEY) || '0');
-                if (Number.isFinite(savedY) && savedY > 0) {
-                    window.scrollTo(0, savedY);
-                }
-            } catch (e) {}
-
             activeDetailRequestToken += 1; // invalidate in-flight detail fetch
             activeDetailPrompt = null;
             closeModal();
@@ -2225,7 +2175,7 @@
         }
 
         function showDetailPage(id) {
-            window.scrollTo(0, 0);
+            window.scrollTo({ top: 0, behavior: 'instant' });
             listPage.hidden = true;
             detailPage.hidden = false;
             closeModal();
