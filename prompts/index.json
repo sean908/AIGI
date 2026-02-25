@@ -1,20 +1,148 @@
 {
   "prompts": [
     {
+      "id": "Roadside-Reverie-Afternoon-Bloom",
+      "file": "Roadside-Reverie-Afternoon-Bloom.json"
+    },
+    {
+      "id": "a-bride-in-white-in-the-hallway",
+      "file": "a-bride-in-white-in-the-hallway.json"
+    },
+    {
+      "id": "An-Intimate-Window-side-Portrait",
+      "file": "An-Intimate-Window-side-Portrait.json"
+    },
+    {
+      "id": "Backlit-Allure-The-Dreamy-Morning-Stretch",
+      "file": "Backlit-Allure-The-Dreamy-Morning-Stretch.json"
+    },
+    {
+      "id": "Cinematic-Chiaroscuro-Portrait-Vulnerability-and-Wistful-Gaze-in-Light-and-Shadow",
+      "file": "Cinematic-Chiaroscuro-Portrait-Vulnerability-and-Wistful-Gaze-in-Light-and-Shadow.json"
+    },
+    {
+      "id": "Cybernetic-Luminous-Style-Transfer",
+      "file": "Cybernetic-Luminous-Style-Transfer.json"
+    },
+    {
       "id": "Doodle-style",
       "file": "Doodle-style.json"
+    },
+    {
+      "id": "Dreamy-Chaos-GrainyFur-and-Glasses-Extreme-Close-up",
+      "file": "Dreamy-Chaos-GrainyFur-and-Glasses-Extreme-Close-up.json"
+    },
+    {
+      "id": "Elegant-Allure-Seductive-OL",
+      "file": "Elegant-Allure-Seductive-OL.json"
+    },
+    {
+      "id": "Flat-Design-Illustration",
+      "file": "Flat-Design-Illustration.json"
+    },
+    {
+      "id": "Gentle-Surprise-a-Stolen-Moment",
+      "file": "Gentle-Surprise-a-Stolen-Moment.json"
     },
     {
       "id": "High-Contrast-BlacknWhite-Side-Profile-Portrait",
       "file": "High-Contrast-BlacknWhite-Side-Profile-Portrait.json"
     },
     {
+      "id": "Hyper-Realistic-Ottoman-Iznik-Ceramic-3D-Logo",
+      "file": "Hyper-Realistic-Ottoman-Iznik-Ceramic-3D-Logo.json"
+    },
+    {
+      "id": "JoJo-fication",
+      "file": "JoJo-fication.json"
+    },
+    {
+      "id": "Lavender-Couture-Gown-Sheer-Organza-Crystals-and-Iridescent-Shimmer",
+      "file": "Lavender-Couture-Gown-Sheer-Organza-Crystals-and-Iridescent-Shimmer.json"
+    },
+    {
+      "id": "Luxurious-Pink-Cloud-Gown",
+      "file": "Luxurious-Pink-Cloud-Gown.json"
+    },
+    {
+      "id": "Minimalism-Portrait",
+      "file": "Minimalism-Portrait.json"
+    },
+    {
+      "id": "Modern-Gym-Reflective-Blue-Portrait",
+      "file": "Modern-Gym-Reflective-Blue-Portrait.json"
+    },
+    {
+      "id": "Morning-Light-and-Pure-Desire-Lace-Camisole-Bedroom-Portrait",
+      "file": "Morning-Light-and-Pure-Desire-Lace-Camisole-Bedroom-Portrait.json"
+    },
+    {
+      "id": "Neon-Dreamscape-Product-Showcase",
+      "file": "Neon-Dreamscape-Product-Showcase.json"
+    },
+    {
       "id": "Pink-Allure-with-a-Playful-Gaze",
       "file": "Pink-Allure-with-a-Playful-Gaze.json"
     },
     {
-      "id": "a-bride-in-white-in-the-hallway",
-      "file": "a-bride-in-white-in-the-hallway.json"
+      "id": "Playful-Pajama-Wink",
+      "file": "Playful-Pajama-Wink.json"
+    },
+    {
+      "id": "Playful-Vector-Half-Body-Cartoon-Portrait",
+      "file": "Playful-Vector-Half-Body-Cartoon-Portrait.json"
+    },
+    {
+      "id": "Playful-Winter-Plunge",
+      "file": "Playful-Winter-Plunge.json"
+    },
+    {
+      "id": "Premium-Studio-Product-Shot",
+      "file": "Premium-Studio-Product-Shot.json"
+    },
+    {
+      "id": "RawCandid-Tokyo-Night-Smartphone-Flash-Blur",
+      "file": "RawCandid-Tokyo-Night-Smartphone-Flash-Blur.json"
+    },
+    {
+      "id": "ReverSe/[Reverse]HighAngle-FullBody-Portrait",
+      "file": "ReverSe/[Reverse]HighAngle-FullBody-Portrait.json"
+    },
+    {
+      "id": "ReverSe/[Reverse]Intimate-Glamour-BlueSequins-and-FauxFur-in-the-Luxe-Bedroom",
+      "file": "ReverSe/[Reverse]Intimate-Glamour-BlueSequins-and-FauxFur-in-the-Luxe-Bedroom.json"
+    },
+    {
+      "id": "ReverSe/Alluring-Innocence-FauxFur-Lingerie-and-Animal-Ear-Cape",
+      "file": "ReverSe/Alluring-Innocence-FauxFur-Lingerie-and-Animal-Ear-Cape.json"
+    },
+    {
+      "id": "ReverSe/Alluring-Red-Satin",
+      "file": "ReverSe/Alluring-Red-Satin.json"
+    },
+    {
+      "id": "Skyscraper-Gaze",
+      "file": "Skyscraper-Gaze.json"
+    },
+    {
+      "id": "Sleek-Vector-Poster-Portrait",
+      "file": "Sleek-Vector-Poster-Portrait.json"
+    },
+    {
+      "id": "Springtime-Vogue-Portrait",
+      "file": "Springtime-Vogue-Portrait.json"
+    },
+    {
+      "id": "Sunny-Desire-Picnic-Allure",
+      "file": "Sunny-Desire-Picnic-Allure.json"
+    },
+    {
+      "id": "Target-Locked",
+      "file": "Target-Locked.json"
+    },
+    {
+      "id": "Urban-Languid-Selfie",
+      "file": "Urban-Languid-Selfie.json"
     }
   ]
 }
