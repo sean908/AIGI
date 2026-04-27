@@ -127,6 +127,10 @@
             box-shadow: 0 0 0 3px var(--focus-ring);
         }
 
+        .manage-btn {
+            min-width: 88px;
+        }
+
         .github-btn {
             display: inline-flex;
             align-items: center;
@@ -169,6 +173,12 @@
             .lang-btn {
                 width: 44px;
                 padding: 0;
+            }
+
+            .manage-btn {
+                min-width: 44px;
+                padding: 0 12px;
+                font-size: 12px;
             }
 
             .github-btn {
@@ -661,6 +671,310 @@
             .detail-two-col { grid-template-columns: 1fr; }
         }
 
+        .manage-page[hidden] { display: none; }
+
+        .manage-page {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 120px 24px 80px;
+        }
+
+        .manage-page-shell {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .manage-page-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        .manage-page-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .manage-page-header p {
+            max-width: 760px;
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .manage-route-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 44px;
+            padding: 0 16px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .manage-layout {
+            display: grid;
+            grid-template-columns: minmax(320px, 520px) minmax(0, 1fr);
+            gap: 24px;
+            align-items: start;
+        }
+
+        .manage-panel,
+        .manage-preview-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .manage-section-card {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            padding: 22px;
+        }
+
+        .manage-section-card h2 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .manage-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .manage-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .manage-field.full-span {
+            grid-column: 1 / -1;
+        }
+
+        .manage-field label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .manage-field-hint {
+            color: var(--text-secondary);
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
+        .manage-input,
+        .manage-textarea {
+            width: 100%;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-primary);
+            font-size: 14px;
+            padding: 12px 14px;
+            outline: none;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+        }
+
+        .manage-input:focus,
+        .manage-textarea:focus {
+            border-color: var(--accent);
+            background: var(--background);
+            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
+        }
+
+        .manage-textarea {
+            min-height: 110px;
+            resize: vertical;
+            line-height: 1.55;
+        }
+
+        .manage-textarea.prompt-field {
+            min-height: 220px;
+        }
+
+        .manage-status {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .manage-status-card {
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            padding: 14px 16px;
+        }
+
+        .manage-status-card strong {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .manage-status-card p,
+        .manage-status-card li {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .manage-status-card ul {
+            padding-left: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .manage-status-card.is-error {
+            border-color: rgba(201, 52, 0, 0.28);
+            background: rgba(201, 52, 0, 0.08);
+        }
+
+        .manage-status-card.is-error strong,
+        .manage-status-card.is-error p,
+        .manage-status-card.is-error li {
+            color: #c93400;
+        }
+
+        .manage-status-card.is-success {
+            border-color: rgba(36, 138, 61, 0.28);
+            background: rgba(36, 138, 61, 0.08);
+        }
+
+        .manage-status-card.is-success strong,
+        .manage-status-card.is-success p {
+            color: #248a3d;
+        }
+
+        .manage-status-card.is-warning {
+            border-color: rgba(180, 110, 0, 0.28);
+            background: rgba(180, 110, 0, 0.08);
+        }
+
+        .manage-status-card.is-warning strong,
+        .manage-status-card.is-warning p,
+        .manage-status-card.is-warning li {
+            color: #8a5d00;
+        }
+
+        .manage-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .save-config-group[hidden] {
+            display: none;
+        }
+
+        .manage-action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 0 16px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+        }
+
+        .manage-action-btn:hover {
+            background: var(--surface-hover);
+        }
+
+        .manage-action-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        .manage-action-btn:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px var(--focus-ring);
+        }
+
+        .manage-action-btn.primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .manage-action-btn.primary:hover {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+        }
+
+        .manage-code-block {
+            min-height: 280px;
+            max-height: 520px;
+            overflow: auto;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            padding: 16px;
+            color: var(--text-primary);
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        }
+
+        .manage-preview-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .manage-card-preview {
+            display: grid;
+            grid-template-columns: minmax(220px, 360px);
+            justify-content: start;
+        }
+
+        .manage-detail-preview {
+            min-height: 240px;
+        }
+
+        @media (max-width: 1100px) {
+            .manage-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .manage-page-header {
+                flex-direction: column;
+            }
+
+            .manage-form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .manage-card-preview {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* Modal */
         .modal[hidden] { display: none; }
 
@@ -741,6 +1055,9 @@
             <span>🎨</span> a AIGI Prompts Lib
         </a>
         <div class="header-right">
+            <button id="managePromptBtn" class="lang-btn manage-btn" type="button" aria-label="打开 Prompt 管理器">
+                Manage
+            </button>
             <button id="langToggleBtn" class="lang-btn" type="button" aria-label="切换语言">
                 EN
             </button>
@@ -765,7 +1082,7 @@
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <input type="text" id="searchInput" placeholder="搜索标题、ID、标签...">
+                <input type="text" id="searchInput" placeholder="搜索标题、路径、标签...">
             </div>
             <div class="tags-container" id="tagsContainer">
                 <!-- Tags will be injected here -->
@@ -782,6 +1099,169 @@
     <main id="detailPage" class="detail-page" hidden>
         <button id="backBtn" class="back-btn" type="button">← 返回</button>
         <div id="detailContent"></div>
+    </main>
+
+    <main id="managePage" class="manage-page" hidden>
+        <div class="manage-page-shell">
+            <div class="manage-page-header">
+                <div>
+                    <button id="manageBackBtn" class="back-btn" type="button">← 返回列表</button>
+                    <h1>Prompt Builder</h1>
+                    <p>在页面里直接录入 prompt 数据，生成标准 JSON，并把当前结果注入到本地会话中做列表/详情预览。路径统一使用相对于 <code>prompts/</code> 的 key。</p>
+                </div>
+                <div id="manageRouteChip" class="manage-route-chip">#/manage</div>
+            </div>
+
+            <div class="manage-layout">
+                <section class="manage-panel">
+                    <div class="manage-section-card">
+                        <h2>Prompt Form</h2>
+                        <div class="manage-form-grid">
+                            <div class="manage-field full-span">
+                                <label for="editorPathInput">相对路径</label>
+                                <input id="editorPathInput" class="manage-input" type="text" placeholder="例如 ReverSe/Alluring-Red-Satin 或 扁平插画">
+                                <div class="manage-field-hint">可输入带 <code>prompts/</code> 前缀或 <code>.json</code> 后缀；系统会自动归一化。支持中文目录名和中文文件名。</div>
+                            </div>
+
+                            <div class="manage-field">
+                                <label for="editorTitleInput">标题</label>
+                                <input id="editorTitleInput" class="manage-input" type="text" placeholder="例如 魅惑红缎">
+                            </div>
+
+                            <div class="manage-field">
+                                <label for="editorPinnedInput">Pin 位置</label>
+                                <input id="editorPinnedInput" class="manage-input" type="number" step="1" placeholder="留空则不置顶">
+                            </div>
+
+                            <div class="manage-field full-span">
+                                <label for="editorTagsInput">Tags</label>
+                                <textarea id="editorTagsInput" class="manage-textarea" placeholder="每行一个，或使用逗号分隔"></textarea>
+                                <div class="manage-field-hint">会输出为 <code>tags: string[]</code>，即使为空也会保留空数组。</div>
+                            </div>
+
+                            <div class="manage-field full-span">
+                                <label for="editorPromptInput">Prompt</label>
+                                <textarea id="editorPromptInput" class="manage-textarea prompt-field" placeholder="输入完整提示词文本"></textarea>
+                            </div>
+
+                            <div class="manage-field full-span">
+                                <label for="editorGeneratedInput">Generated 图片链接</label>
+                                <textarea id="editorGeneratedInput" class="manage-textarea" placeholder="每行一个 URL"></textarea>
+                            </div>
+
+                            <div class="manage-field">
+                                <label for="editorExampleInput">Example 图片链接</label>
+                                <textarea id="editorExampleInput" class="manage-textarea" placeholder="每行一个 URL"></textarea>
+                            </div>
+
+                            <div class="manage-field">
+                                <label for="editorInputImagesInput">Input 图片链接</label>
+                                <textarea id="editorInputImagesInput" class="manage-textarea" placeholder="每行一个 URL"></textarea>
+                            </div>
+
+                            <div class="manage-field full-span">
+                                <label for="editorNoteInput">Note</label>
+                                <textarea id="editorNoteInput" class="manage-textarea" placeholder="可选备注"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="manage-section-card">
+                        <h2>Actions</h2>
+                        <div class="manage-actions">
+                            <button id="editorApplyBtn" class="manage-action-btn primary" type="button">应用到当前会话</button>
+                            <button id="editorOpenDetailBtn" class="manage-action-btn" type="button">打开详情路由</button>
+                            <button id="editorCopyJsonBtn" class="manage-action-btn" type="button">复制 JSON</button>
+                            <button id="editorResetBtn" class="manage-action-btn" type="button">重置表单</button>
+                        </div>
+                    </div>
+
+                    <div class="manage-section-card">
+                        <h2>Online Save</h2>
+                        <div class="manage-form-grid">
+                            <div class="manage-field full-span">
+                                <label for="editorSaveModeSelect">Save Mode</label>
+                                <select id="editorSaveModeSelect" class="manage-input">
+                                    <option value="github-direct">GitHub Direct (Pages)</option>
+                                    <option value="save-api">Save API</option>
+                                </select>
+                                <div class="manage-field-hint">GitHub Pages 推荐使用 <code>GitHub Direct (Pages)</code>。该模式由浏览器直接调用 GitHub API 写入目标仓库。</div>
+                            </div>
+                        </div>
+
+                        <div id="editorGitHubDirectConfig" class="manage-form-grid save-config-group">
+                            <div class="manage-field">
+                                <label for="editorGitHubOwnerInput">GitHub Owner</label>
+                                <input id="editorGitHubOwnerInput" class="manage-input" type="text" placeholder="例如 sean908">
+                            </div>
+
+                            <div class="manage-field">
+                                <label for="editorGitHubRepoInput">GitHub Repo</label>
+                                <input id="editorGitHubRepoInput" class="manage-input" type="text" placeholder="例如 AIGI_reArch">
+                            </div>
+
+                            <div class="manage-field">
+                                <label for="editorGitHubBranchInput">GitHub Branch</label>
+                                <input id="editorGitHubBranchInput" class="manage-input" type="text" placeholder="默认 main">
+                            </div>
+
+                            <div class="manage-field full-span">
+                                <label for="editorGitHubTokenInput">GitHub PAT</label>
+                                <input id="editorGitHubTokenInput" class="manage-input" type="password" placeholder="输入有 Contents 写权限的 GitHub PAT">
+                                <div class="manage-field-hint">仅保存在当前浏览器会话中，不会写入 prompt JSON。建议使用 fine-grained PAT，并只授予目标仓库 <code>Contents: Read and write</code>。</div>
+                            </div>
+                        </div>
+
+                        <div id="editorSaveApiConfig" class="manage-form-grid save-config-group" hidden>
+                            <div class="manage-field full-span">
+                                <label for="editorSaveEndpointInput">Save Endpoint</label>
+                                <input id="editorSaveEndpointInput" class="manage-input" type="url" placeholder="默认 /api/save-prompt">
+                                <div class="manage-field-hint">同域部署时默认使用 <code>/api/save-prompt</code>。如果静态前端和保存 API 分离部署，可以填完整 URL。</div>
+                            </div>
+
+                            <div class="manage-field full-span">
+                                <label for="editorSaveTokenInput">Save Access Token</label>
+                                <input id="editorSaveTokenInput" class="manage-input" type="password" placeholder="输入服务端配置的共享保存密钥">
+                                <div class="manage-field-hint">仅保存在当前浏览器会话中，不会写入 prompt JSON。</div>
+                            </div>
+                        </div>
+
+                        <div class="manage-actions">
+                            <button id="editorSaveBtn" class="manage-action-btn primary" type="button">保存到线上</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="manage-preview-panel">
+                    <div class="manage-section-card">
+                        <h2>Validation</h2>
+                        <div id="editorStatus" class="manage-status"></div>
+                    </div>
+
+                    <div class="manage-section-card">
+                        <h2>Save Status</h2>
+                        <div id="editorSaveStatus" class="manage-status"></div>
+                    </div>
+
+                    <div class="manage-section-card">
+                        <h2>JSON Preview</h2>
+                        <pre id="editorJsonPreview" class="manage-code-block"></pre>
+                    </div>
+
+                    <div class="manage-preview-stack">
+                        <div class="manage-section-card">
+                            <h2>Card Preview</h2>
+                            <div id="editorCardPreview" class="manage-card-preview"></div>
+                        </div>
+
+                        <div class="manage-section-card">
+                            <h2>Detail Preview</h2>
+                            <div id="editorDetailPreview" class="manage-detail-preview"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
     </main>
 
     <div id="imageModal" class="modal" hidden>
@@ -830,12 +1310,29 @@
         const detailCache = new Map();
         const detailInFlight = new Map();
         let activeDetailRequestToken = 0;
+        let editorLastAppliedKey = '';
+        let editorSaveFeedback = null;
+
+        const RESERVED_PROMPT_KEYS = new Set(['index', 'aggregated', 'summary', 'prompts']);
+        const SAVE_MODE_STORAGE_KEY = 'aigi-save-mode';
+        const SAVE_ENDPOINT_STORAGE_KEY = 'aigi-save-endpoint';
+        const SAVE_TOKEN_STORAGE_KEY = 'aigi-save-token';
+        const GITHUB_OWNER_STORAGE_KEY = 'aigi-github-owner';
+        const GITHUB_REPO_STORAGE_KEY = 'aigi-github-repo';
+        const GITHUB_BRANCH_STORAGE_KEY = 'aigi-github-branch';
+        const GITHUB_TOKEN_STORAGE_KEY = 'aigi-github-token';
+        const DEFAULT_SAVE_ENDPOINT = '/api/save-prompt';
+        const DEFAULT_SAVE_MODE = 'github-direct';
+        const DEFAULT_GITHUB_BRANCH = 'main';
 
         // DOM Elements
         const listPage = document.getElementById('listPage');
         const detailPage = document.getElementById('detailPage');
+        const managePage = document.getElementById('managePage');
         const detailContent = document.getElementById('detailContent');
         const backBtn = document.getElementById('backBtn');
+        const manageBackBtn = document.getElementById('manageBackBtn');
+        const managePromptBtn = document.getElementById('managePromptBtn');
         const grid = document.getElementById('promptsGrid');
         const searchInput = document.getElementById('searchInput');
         const tagsContainer = document.getElementById('tagsContainer');
@@ -848,6 +1345,47 @@
         const modalBody = modalImage ? modalImage.parentElement : null;
         const modalControls = modalBody ? modalBody.querySelector('.modal-controls') : null;
         const headerEl = document.querySelector('header');
+        const manageRouteChip = document.getElementById('manageRouteChip');
+        const editorPathInput = document.getElementById('editorPathInput');
+        const editorTitleInput = document.getElementById('editorTitleInput');
+        const editorPinnedInput = document.getElementById('editorPinnedInput');
+        const editorTagsInput = document.getElementById('editorTagsInput');
+        const editorPromptInput = document.getElementById('editorPromptInput');
+        const editorGeneratedInput = document.getElementById('editorGeneratedInput');
+        const editorExampleInput = document.getElementById('editorExampleInput');
+        const editorInputImagesInput = document.getElementById('editorInputImagesInput');
+        const editorNoteInput = document.getElementById('editorNoteInput');
+        const editorApplyBtn = document.getElementById('editorApplyBtn');
+        const editorOpenDetailBtn = document.getElementById('editorOpenDetailBtn');
+        const editorCopyJsonBtn = document.getElementById('editorCopyJsonBtn');
+        const editorResetBtn = document.getElementById('editorResetBtn');
+        const editorSaveModeSelect = document.getElementById('editorSaveModeSelect');
+        const editorGitHubDirectConfig = document.getElementById('editorGitHubDirectConfig');
+        const editorSaveApiConfig = document.getElementById('editorSaveApiConfig');
+        const editorGitHubOwnerInput = document.getElementById('editorGitHubOwnerInput');
+        const editorGitHubRepoInput = document.getElementById('editorGitHubRepoInput');
+        const editorGitHubBranchInput = document.getElementById('editorGitHubBranchInput');
+        const editorGitHubTokenInput = document.getElementById('editorGitHubTokenInput');
+        const editorSaveEndpointInput = document.getElementById('editorSaveEndpointInput');
+        const editorSaveTokenInput = document.getElementById('editorSaveTokenInput');
+        const editorSaveBtn = document.getElementById('editorSaveBtn');
+        const editorStatus = document.getElementById('editorStatus');
+        const editorSaveStatus = document.getElementById('editorSaveStatus');
+        const editorJsonPreview = document.getElementById('editorJsonPreview');
+        const editorCardPreview = document.getElementById('editorCardPreview');
+        const editorDetailPreview = document.getElementById('editorDetailPreview');
+
+        const editorFieldElements = [
+            editorPathInput,
+            editorTitleInput,
+            editorPinnedInput,
+            editorTagsInput,
+            editorPromptInput,
+            editorGeneratedInput,
+            editorExampleInput,
+            editorInputImagesInput,
+            editorNoteInput
+        ].filter(Boolean);
 
         const LIST_SCROLL_RESTORE_Y_KEY = 'aigi-list-scroll-y';
         const LIST_SCROLL_RESTORE_PROMPT_ID_KEY = 'aigi-list-scroll-prompt-id';
@@ -908,11 +1446,18 @@
             renderTags();
             filterAndRender();
             if (!detailPage.hidden && activeDetailPrompt) renderDetailPrompt(activeDetailPrompt);
+            if (!managePage.hidden) renderEditorPreview();
         }
 
         if (langToggleBtn) {
             langToggleBtn.addEventListener('click', () => {
                 setLang(currentLang === 'zh' ? 'en' : 'zh');
+            });
+        }
+
+        if (managePromptBtn) {
+            managePromptBtn.addEventListener('click', () => {
+                location.hash = '#/manage';
             });
         }
 
@@ -952,11 +1497,336 @@
             return [];
         }
 
-        function normalizePrompt(rawPrompt, fallbackId) {
+        function normalizePromptKey(value) {
+            if (typeof value !== 'string') return '';
+            const trimmed = value.trim().replace(/\\/g, '/');
+            if (!trimmed) return '';
+
+            const withoutRelativePrefix = trimmed.replace(/^\.?\//, '');
+            const withoutPromptsBase = withoutRelativePrefix.replace(/^prompts\//i, '');
+            const withoutSuffix = withoutPromptsBase.replace(/\.json$/i, '');
+
+            return withoutSuffix
+                .split('/')
+                .filter(segment => segment.length > 0)
+                .join('/');
+        }
+
+        function encodePromptKey(value) {
+            const key = normalizePromptKey(value);
+            if (!key) return '';
+            return key.split('/').map(encodeURIComponent).join('/');
+        }
+
+        function decodePromptKey(value) {
+            if (typeof value !== 'string') return '';
+            return normalizePromptKey(
+                value
+                    .split('/')
+                    .map((segment) => {
+                        try {
+                            return decodeURIComponent(segment);
+                        } catch (error) {
+                            return segment;
+                        }
+                    })
+                    .join('/')
+            );
+        }
+
+        function getEmptyEditorDraft() {
+            return {
+                path: '',
+                title: '',
+                pinnedPosition: '',
+                tags: '',
+                prompt: '',
+                generated: '',
+                example: '',
+                input: '',
+                note: ''
+            };
+        }
+
+        function getConfiguredSaveEndpoint() {
+            const inputValue = editorSaveEndpointInput ? editorSaveEndpointInput.value.trim() : '';
+            return inputValue || DEFAULT_SAVE_ENDPOINT;
+        }
+
+        function getConfiguredSaveMode() {
+            const raw = editorSaveModeSelect ? String(editorSaveModeSelect.value || '').trim() : '';
+            return raw || DEFAULT_SAVE_MODE;
+        }
+
+        function getConfiguredGitHubOwner() {
+            return editorGitHubOwnerInput ? editorGitHubOwnerInput.value.trim() : '';
+        }
+
+        function getConfiguredGitHubRepo() {
+            return editorGitHubRepoInput ? editorGitHubRepoInput.value.trim() : '';
+        }
+
+        function getConfiguredGitHubBranch() {
+            const raw = editorGitHubBranchInput ? editorGitHubBranchInput.value.trim() : '';
+            return raw || DEFAULT_GITHUB_BRANCH;
+        }
+
+        function getConfiguredGitHubToken() {
+            return editorGitHubTokenInput ? editorGitHubTokenInput.value.trim() : '';
+        }
+
+        function getEditorSaveToken() {
+            return editorSaveTokenInput ? editorSaveTokenInput.value.trim() : '';
+        }
+
+        function persistEditorSaveSettings() {
+            const saveMode = getConfiguredSaveMode();
+            const endpoint = getConfiguredSaveEndpoint();
+            const token = getEditorSaveToken();
+            const githubOwner = getConfiguredGitHubOwner();
+            const githubRepo = getConfiguredGitHubRepo();
+            const githubBranch = getConfiguredGitHubBranch();
+            const githubToken = getConfiguredGitHubToken();
+
+            try {
+                localStorage.setItem(SAVE_MODE_STORAGE_KEY, saveMode);
+                localStorage.setItem(SAVE_ENDPOINT_STORAGE_KEY, endpoint);
+                localStorage.setItem(GITHUB_OWNER_STORAGE_KEY, githubOwner);
+                localStorage.setItem(GITHUB_REPO_STORAGE_KEY, githubRepo);
+                localStorage.setItem(GITHUB_BRANCH_STORAGE_KEY, githubBranch);
+            } catch (error) {
+                // Ignore localStorage failures.
+            }
+
+            try {
+                if (token) {
+                    sessionStorage.setItem(SAVE_TOKEN_STORAGE_KEY, token);
+                } else {
+                    sessionStorage.removeItem(SAVE_TOKEN_STORAGE_KEY);
+                }
+
+                if (githubToken) {
+                    sessionStorage.setItem(GITHUB_TOKEN_STORAGE_KEY, githubToken);
+                } else {
+                    sessionStorage.removeItem(GITHUB_TOKEN_STORAGE_KEY);
+                }
+            } catch (error) {
+                // Ignore sessionStorage failures.
+            }
+        }
+
+        function loadEditorSaveSettings() {
+            let saveMode = DEFAULT_SAVE_MODE;
+            let endpoint = DEFAULT_SAVE_ENDPOINT;
+            let token = '';
+            let githubOwner = '';
+            let githubRepo = '';
+            let githubBranch = DEFAULT_GITHUB_BRANCH;
+            let githubToken = '';
+
+            try {
+                const storedMode = localStorage.getItem(SAVE_MODE_STORAGE_KEY);
+                if (typeof storedMode === 'string' && storedMode.trim()) {
+                    saveMode = storedMode.trim();
+                }
+
+                const storedEndpoint = localStorage.getItem(SAVE_ENDPOINT_STORAGE_KEY);
+                if (typeof storedEndpoint === 'string' && storedEndpoint.trim()) {
+                    endpoint = storedEndpoint.trim();
+                }
+
+                const storedOwner = localStorage.getItem(GITHUB_OWNER_STORAGE_KEY);
+                if (typeof storedOwner === 'string' && storedOwner.trim()) {
+                    githubOwner = storedOwner.trim();
+                }
+
+                const storedRepo = localStorage.getItem(GITHUB_REPO_STORAGE_KEY);
+                if (typeof storedRepo === 'string' && storedRepo.trim()) {
+                    githubRepo = storedRepo.trim();
+                }
+
+                const storedBranch = localStorage.getItem(GITHUB_BRANCH_STORAGE_KEY);
+                if (typeof storedBranch === 'string' && storedBranch.trim()) {
+                    githubBranch = storedBranch.trim();
+                }
+            } catch (error) {
+                // Ignore storage failures.
+            }
+
+            try {
+                const storedToken = sessionStorage.getItem(SAVE_TOKEN_STORAGE_KEY);
+                if (typeof storedToken === 'string' && storedToken.trim()) {
+                    token = storedToken.trim();
+                }
+
+                const storedGitHubToken = sessionStorage.getItem(GITHUB_TOKEN_STORAGE_KEY);
+                if (typeof storedGitHubToken === 'string' && storedGitHubToken.trim()) {
+                    githubToken = storedGitHubToken.trim();
+                }
+            } catch (error) {
+                // Ignore storage failures.
+            }
+
+            if (editorSaveModeSelect) editorSaveModeSelect.value = saveMode;
+            if (editorSaveEndpointInput) editorSaveEndpointInput.value = endpoint;
+            if (editorSaveTokenInput) editorSaveTokenInput.value = token;
+            if (editorGitHubOwnerInput) editorGitHubOwnerInput.value = githubOwner;
+            if (editorGitHubRepoInput) editorGitHubRepoInput.value = githubRepo;
+            if (editorGitHubBranchInput) editorGitHubBranchInput.value = githubBranch;
+            if (editorGitHubTokenInput) editorGitHubTokenInput.value = githubToken;
+            updateSaveModeUi();
+        }
+
+        function normalizeSaveEndpoint(value) {
+            const raw = String(value || '').trim();
+            if (!raw) return '';
+
+            if (raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('/')) {
+                return raw;
+            }
+
+            return `https://${raw}`;
+        }
+
+        function updateSaveModeUi() {
+            const mode = getConfiguredSaveMode();
+            if (editorGitHubDirectConfig) editorGitHubDirectConfig.hidden = mode !== 'github-direct';
+            if (editorSaveApiConfig) editorSaveApiConfig.hidden = mode !== 'save-api';
+        }
+
+        function getEditorDraftFromInputs() {
+            return {
+                path: editorPathInput ? editorPathInput.value : '',
+                title: editorTitleInput ? editorTitleInput.value : '',
+                pinnedPosition: editorPinnedInput ? editorPinnedInput.value : '',
+                tags: editorTagsInput ? editorTagsInput.value : '',
+                prompt: editorPromptInput ? editorPromptInput.value : '',
+                generated: editorGeneratedInput ? editorGeneratedInput.value : '',
+                example: editorExampleInput ? editorExampleInput.value : '',
+                input: editorInputImagesInput ? editorInputImagesInput.value : '',
+                note: editorNoteInput ? editorNoteInput.value : ''
+            };
+        }
+
+        function applyEditorDraftToInputs(draft) {
+            const safeDraft = draft && typeof draft === 'object' ? draft : getEmptyEditorDraft();
+            if (editorPathInput) editorPathInput.value = String(safeDraft.path || '');
+            if (editorTitleInput) editorTitleInput.value = String(safeDraft.title || '');
+            if (editorPinnedInput) editorPinnedInput.value = String(safeDraft.pinnedPosition || '');
+            if (editorTagsInput) editorTagsInput.value = String(safeDraft.tags || '');
+            if (editorPromptInput) editorPromptInput.value = String(safeDraft.prompt || '');
+            if (editorGeneratedInput) editorGeneratedInput.value = String(safeDraft.generated || '');
+            if (editorExampleInput) editorExampleInput.value = String(safeDraft.example || '');
+            if (editorInputImagesInput) editorInputImagesInput.value = String(safeDraft.input || '');
+            if (editorNoteInput) editorNoteInput.value = String(safeDraft.note || '');
+        }
+
+        function splitEditorList(value, options) {
+            const opts = options && typeof options === 'object' ? options : {};
+            const allowComma = opts.allowComma !== undefined ? Boolean(opts.allowComma) : false;
+            const allowChineseComma = opts.allowChineseComma !== undefined ? Boolean(opts.allowChineseComma) : allowComma;
+            let normalized = typeof value === 'string' ? value : '';
+            if (allowComma) normalized = normalized.replace(/,/g, '\n');
+            if (allowChineseComma) normalized = normalized.replace(/，/g, '\n');
+            return normalized
+                .split('\n')
+                .map((item) => item.trim())
+                .filter(Boolean);
+        }
+
+        function sanitizeEditorPinnedPosition(value) {
+            const raw = String(value || '').trim();
+            if (!raw) return null;
+            const parsed = Number(raw);
+            return Number.isFinite(parsed) ? parsed : Number.NaN;
+        }
+
+        function buildPromptDocumentFromDraft(draft) {
+            const safeDraft = draft && typeof draft === 'object' ? draft : getEmptyEditorDraft();
+            const key = normalizePromptKey(safeDraft.path);
+            const title = String(safeDraft.title || '').trim();
+            const promptText = String(safeDraft.prompt || '').trim();
+            const tags = splitEditorList(safeDraft.tags, { allowComma: true, allowChineseComma: true });
+            const generated = splitEditorList(safeDraft.generated);
+            const example = splitEditorList(safeDraft.example);
+            const input = splitEditorList(safeDraft.input);
+            const note = String(safeDraft.note || '').trim();
+            const pinnedPosition = sanitizeEditorPinnedPosition(safeDraft.pinnedPosition);
+
+            const errors = [];
+            const warnings = [];
+
+            if (!key) {
+                errors.push('相对路径不能为空。');
+            } else {
+                const segments = key.split('/');
+                if (segments.some((segment) => segment === '.' || segment === '..')) {
+                    errors.push('相对路径不能包含 "." 或 ".." 路径段。');
+                }
+                if (segments.some((segment) => segment.length === 0)) {
+                    errors.push('相对路径不能包含空路径段。');
+                }
+                const basename = segments[segments.length - 1] || '';
+                if (RESERVED_PROMPT_KEYS.has(basename.toLowerCase())) {
+                    errors.push(`相对路径不能使用保留文件名 "${basename}"。`);
+                }
+            }
+
+            if (!title) errors.push('标题不能为空。');
+            if (!promptText) errors.push('Prompt 不能为空。');
+            if (Number.isNaN(pinnedPosition)) errors.push('Pin 位置必须是有效数字或留空。');
+
+            if (tags.length === 0) {
+                warnings.push('当前 tags 为空，生成的 JSON 会保留空数组。');
+            }
+
+            if (generated.length === 0 && example.length === 0 && input.length === 0) {
+                warnings.push('当前没有填写任何图片链接，卡片和详情页预览会显示为空图状态。');
+            }
+
+            const existingPrompt = key ? allPrompts.find((item) => item.key === key) : null;
+            if (existingPrompt) {
+                warnings.push(`该路径已存在于当前数据集中，应用到当前会话后会覆盖 "${existingPrompt.title || existingPrompt.key}" 的本地预览。`);
+            }
+
+            const promptDoc = {
+                title,
+                tags,
+                prompt: promptText,
+                images: {
+                    generated
+                }
+            };
+
+            if (example.length > 0) promptDoc.images.example = example;
+            if (input.length > 0) promptDoc.images.input = input;
+            if (note) promptDoc.note = note;
+            if (pinnedPosition !== null && !Number.isNaN(pinnedPosition)) {
+                promptDoc.pinned_position = pinnedPosition;
+            }
+
+            const normalizedPrompt = normalizePrompt(promptDoc, key);
+            const serializedJson = JSON.stringify(promptDoc, null, 2);
+            const detailRoute = key ? `#/detail/${encodePromptKey(key)}` : '#/detail/<path>';
+
+            return {
+                key,
+                promptDoc,
+                normalizedPrompt,
+                serializedJson,
+                errors,
+                warnings,
+                existingPrompt,
+                detailRoute
+            };
+        }
+
+        function normalizePrompt(rawPrompt, sourceKey) {
             const prompt = rawPrompt && typeof rawPrompt === 'object' ? rawPrompt : {};
             const images = (prompt.images && typeof prompt.images === 'object' && !Array.isArray(prompt.images))
                 ? { ...prompt.images }
                 : {};
+            const key = normalizePromptKey(sourceKey || prompt.key || prompt.path || prompt.file || prompt.id || '');
 
             const tags = Array.isArray(prompt.tags)
                 ? prompt.tags.filter(tag => typeof tag === 'string' && tag.length > 0)
@@ -972,14 +1842,19 @@
             const note = typeof prompt.note === 'string'
                 ? prompt.note
                 : (typeof images.note === 'string' ? images.note : '');
+            const pinnedPosition = typeof prompt.pinned_position === 'number' && Number.isFinite(prompt.pinned_position)
+                ? prompt.pinned_position
+                : null;
 
             return {
                 ...prompt,
-                id: String(prompt.id || fallbackId || ''),
+                key,
+                id: key,
                 title: typeof prompt.title === 'string' ? prompt.title : '',
                 prompt: typeof prompt.prompt === 'string' ? prompt.prompt : '',
                 tags,
                 note,
+                pinned_position: pinnedPosition,
                 generatedImages: generated,
                 images: {
                     generated,
@@ -989,22 +1864,39 @@
             };
         }
 
-        function deriveIdFromFile(file) {
-            if (typeof file !== 'string') return '';
-            return file.replace(/\.json$/i, '');
+        function buildPromptDetailUrl(promptKey) {
+            const encodedKey = encodePromptKey(promptKey);
+            return encodedKey ? `./prompts/${encodedKey}.json` : '';
         }
 
-        function buildPromptDetailUrl(id) {
-            const safeId = String(id || '');
-            const encoded = safeId.split('/').map(encodeURIComponent).join('/');
-            return `./prompts/${encoded}.json`;
+        function comparePrompts(a, b) {
+            const aPin = typeof a?.pinned_position === 'number' && Number.isFinite(a.pinned_position)
+                ? a.pinned_position
+                : null;
+            const bPin = typeof b?.pinned_position === 'number' && Number.isFinite(b.pinned_position)
+                ? b.pinned_position
+                : null;
+
+            const aHasPin = aPin !== null;
+            const bHasPin = bPin !== null;
+            if (aHasPin && !bHasPin) return -1;
+            if (!aHasPin && bHasPin) return 1;
+            if (aHasPin && bHasPin && aPin !== bPin) return aPin - bPin;
+
+            const aKey = String(a?.key || '');
+            const bKey = String(b?.key || '');
+            return aKey.localeCompare(bKey);
+        }
+
+        function sortPrompts(prompts) {
+            return Array.isArray(prompts) ? [...prompts].sort(comparePrompts) : [];
         }
 
         async function loadSummary() {
             console.info('[loader] trying prompts/summary.json');
             const data = await fetchJson('./prompts/summary.json');
             if (!Array.isArray(data)) throw new Error('Invalid prompts/summary.json format');
-            return data.map((prompt, index) => normalizePrompt(prompt, `summary-${index}`));
+            return sortPrompts(data.map((prompt, index) => normalizePrompt(prompt, prompt && prompt.id ? prompt.id : `summary-${index}`)));
         }
 
         async function loadAggregatedPrompts() {
@@ -1019,7 +1911,7 @@
                 console.warn('Unexpected aggregated schemaVersion:', data.schemaVersion);
             }
 
-            return list.map((prompt, index) => normalizePrompt(prompt, `agg-${index}`));
+            return sortPrompts(list.map((prompt, index) => normalizePrompt(prompt, prompt && prompt.id ? prompt.id : `agg-${index}`)));
         }
 
         async function loadPromptsFromManifest() {
@@ -1036,12 +1928,9 @@
                     throw new Error('Invalid manifest entry file');
                 }
 
-                const entryId = (entry && typeof entry === 'object' && typeof entry.id === 'string' && entry.id.length > 0)
-                    ? entry.id
-                    : (deriveIdFromFile(file) || `prompt-${index}`);
-
-                const data = await fetchJson(`./prompts/${file}`);
-                return normalizePrompt(data, entryId);
+                const promptKey = normalizePromptKey(file) || `prompt-${index}`;
+                const data = await fetchJson(buildPromptDetailUrl(promptKey));
+                return normalizePrompt(data, promptKey);
             }));
 
             const prompts = [];
@@ -1054,7 +1943,7 @@
             });
 
             if (prompts.length === 0) throw new Error('No prompts loaded from prompts/index.json');
-            return prompts;
+            return sortPrompts(prompts);
         }
 
         async function loadPromptsLegacy() {
@@ -1064,7 +1953,7 @@
                 ? data
                 : (data && typeof data === 'object' ? data.prompts : null);
             if (!Array.isArray(list)) throw new Error('Invalid prompts.json format');
-            return list.map((prompt, index) => normalizePrompt(prompt, `legacy-${index}`));
+            return sortPrompts(list.map((prompt, index) => normalizePrompt(prompt, prompt && prompt.id ? prompt.id : `legacy-${index}`)));
         }
 
         async function loadAllPrompts() {
@@ -1112,9 +2001,9 @@
             return prompts;
         }
 
-        function loadDetailPrompt(id) {
-            const key = String(id || '');
-            if (!key) return Promise.reject(new Error('Missing prompt id'));
+        function loadDetailPrompt(promptKey) {
+            const key = normalizePromptKey(promptKey);
+            if (!key) return Promise.reject(new Error('Missing prompt key'));
 
             if (detailCache.has(key)) {
                 return Promise.resolve(detailCache.get(key));
@@ -1128,8 +2017,9 @@
             const request = fetchJson(url)
                 .then((data) => {
                     const prompt = normalizePrompt(data, key);
-                    if (prompt.id !== key) {
-                        console.warn('[loader] detail id mismatch, overriding:', { requested: key, loaded: prompt.id });
+                    if (prompt.key !== key) {
+                        console.warn('[loader] detail key mismatch, overriding:', { requested: key, loaded: prompt.key });
+                        prompt.key = key;
                         prompt.id = key;
                     }
                     detailCache.set(key, prompt);
@@ -1196,7 +2086,7 @@
 
             filteredPrompts = allPrompts.filter(prompt => {
                 const title = String(prompt.title || '').toLowerCase();
-                const id = String(prompt.id || '').toLowerCase();
+                const promptKey = String(prompt.key || '').toLowerCase();
                 const tags = Array.isArray(prompt.tags) ? prompt.tags : [];
 
                 if (selectedKey) {
@@ -1205,10 +2095,10 @@
                 }
 
                 if (searchTerm) {
-                    const matchesId = id.includes(searchTerm);
+                    const matchesPath = promptKey.includes(searchTerm);
                     const matchesTitle = title.includes(searchTerm);
                     const matchesTags = tags.some(tag => tag.toLowerCase().includes(searchTerm));
-                    if (!matchesId && !matchesTitle && !matchesTags) {
+                    if (!matchesPath && !matchesTitle && !matchesTags) {
                         return false;
                     }
                 }
@@ -1235,7 +2125,7 @@
 
             const card = document.createElement('div');
             card.className = 'card';
-            card.dataset.promptId = String(prompt.id ?? '');
+            card.dataset.promptKey = String(prompt.key ?? '');
 
             const imageContainer = document.createElement('div');
             imageContainer.className = 'image-container';
@@ -1245,7 +2135,7 @@
                 imageContainer.appendChild(renderImageGroup(
                     generatedUrls,
                     'generated',
-                    String(prompt.title || prompt.id || ''),
+                    String(prompt.title || prompt.key || ''),
                     { containerClass: 'card-image-group', imageClass: 'card-image', enableModal: false, eager: isFirstScreen }
                 ));
             } else if (coverUrl) {
@@ -1326,19 +2216,19 @@
         };
 
         function getOrCreateCard(prompt, isFirstScreen) {
-            const id = String(prompt.id ?? '');
-            if (id) {
-                const cached = virtualGridState.cardCache.get(id);
+            const promptKey = String(prompt.key ?? '');
+            if (promptKey) {
+                const cached = virtualGridState.cardCache.get(promptKey);
                 if (cached) {
                     // Refresh insertion order so Map iteration order matches LRU.
-                    virtualGridState.cardCache.delete(id);
-                    virtualGridState.cardCache.set(id, cached);
+                    virtualGridState.cardCache.delete(promptKey);
+                    virtualGridState.cardCache.set(promptKey, cached);
                     return cached;
                 }
             }
 
             const card = createCardElement(prompt, isFirstScreen);
-            if (id) virtualGridState.cardCache.set(id, card);
+            if (promptKey) virtualGridState.cardCache.set(promptKey, card);
             return card;
         }
 
@@ -1613,17 +2503,17 @@
         grid.addEventListener('click', (e) => {
             const card = e.target.closest('.card');
             if (!card) return;
-            const id = card.dataset.promptId;
-            if (!id) return;
-            saveListScrollRestoreState(id);
-            location.hash = `#/detail/${encodeURIComponent(id)}`;
+            const promptKey = normalizePromptKey(card.dataset.promptKey);
+            if (!promptKey) return;
+            saveListScrollRestoreState(promptKey);
+            location.hash = `#/detail/${encodePromptKey(promptKey)}`;
         });
 
-        function saveListScrollRestoreState(promptId) {
-            const id = String(promptId || '');
-            if (!id) return;
+        function saveListScrollRestoreState(promptKey) {
+            const key = normalizePromptKey(promptKey);
+            if (!key) return;
             try {
-                sessionStorage.setItem(LIST_SCROLL_RESTORE_PROMPT_ID_KEY, id);
+                sessionStorage.setItem(LIST_SCROLL_RESTORE_PROMPT_ID_KEY, key);
                 sessionStorage.setItem(LIST_SCROLL_RESTORE_Y_KEY, String(window.scrollY || 0));
             } catch (error) {
                 // sessionStorage may be blocked; ignore.
@@ -1631,10 +2521,10 @@
         }
 
         function restoreListScrollIfNeeded() {
-            let promptId = '';
+            let promptKey = '';
             let fallbackY = 0;
             try {
-                promptId = sessionStorage.getItem(LIST_SCROLL_RESTORE_PROMPT_ID_KEY) || '';
+                promptKey = normalizePromptKey(sessionStorage.getItem(LIST_SCROLL_RESTORE_PROMPT_ID_KEY) || '');
                 fallbackY = Number.parseFloat(sessionStorage.getItem(LIST_SCROLL_RESTORE_Y_KEY) || '0');
             } catch (error) {
                 return;
@@ -1649,13 +2539,13 @@
                 }
             };
 
-            if (!promptId) {
+            if (!promptKey) {
                 filterAndRender();
                 return;
             }
             if (!Number.isFinite(fallbackY) || fallbackY < 0) fallbackY = 0;
 
-            const targetIndex = filteredPrompts.findIndex(prompt => String(prompt.id ?? '') === promptId);
+            const targetIndex = filteredPrompts.findIndex(prompt => String(prompt.key ?? '') === promptKey);
             if (targetIndex < 0) {
                 window.scrollTo({ top: fallbackY, behavior: 'instant' });
                 clear();
@@ -1712,6 +2602,141 @@
             renderTags();
             filterAndRender();
         });
+
+        editorFieldElements.forEach((field) => {
+            field.addEventListener('input', () => {
+                renderEditorPreview();
+            });
+        });
+
+        if (editorSaveEndpointInput) {
+            editorSaveEndpointInput.addEventListener('input', () => {
+                persistEditorSaveSettings();
+                renderEditorSaveStatus();
+            });
+        }
+
+        if (editorSaveModeSelect) {
+            editorSaveModeSelect.addEventListener('input', () => {
+                editorSaveFeedback = null;
+                persistEditorSaveSettings();
+                updateSaveModeUi();
+                renderEditorSaveStatus();
+            });
+        }
+
+        [editorGitHubOwnerInput, editorGitHubRepoInput, editorGitHubBranchInput, editorGitHubTokenInput].filter(Boolean).forEach((field) => {
+            field.addEventListener('input', () => {
+                persistEditorSaveSettings();
+                renderEditorSaveStatus();
+            });
+        });
+
+        if (editorSaveTokenInput) {
+            editorSaveTokenInput.addEventListener('input', () => {
+                persistEditorSaveSettings();
+                renderEditorSaveStatus();
+            });
+        }
+
+        if (editorResetBtn) {
+            editorResetBtn.addEventListener('click', () => {
+                editorLastAppliedKey = '';
+                applyEditorDraftToInputs(getEmptyEditorDraft());
+                renderEditorPreview();
+            });
+        }
+
+        if (editorCopyJsonBtn) {
+            editorCopyJsonBtn.addEventListener('click', async () => {
+                const preview = renderEditorPreview();
+                if (preview.errors.length > 0) return;
+
+                const labels = currentLang === 'zh'
+                    ? { idle: '复制 JSON', ok: '已复制', fail: '失败' }
+                    : { idle: 'COPY JSON', ok: 'COPIED', fail: 'FAILED' };
+
+                const original = labels.idle;
+                editorCopyJsonBtn.textContent = original;
+
+                try {
+                    const ok = await copyToClipboard(preview.serializedJson);
+                    editorCopyJsonBtn.textContent = ok ? labels.ok : labels.fail;
+                } catch {
+                    editorCopyJsonBtn.textContent = labels.fail;
+                }
+
+                setTimeout(() => {
+                    editorCopyJsonBtn.textContent = original;
+                }, 900);
+            });
+        }
+
+        if (editorApplyBtn) {
+            editorApplyBtn.addEventListener('click', () => {
+                const preview = renderEditorPreview();
+                if (preview.errors.length > 0) return;
+                upsertPromptIntoCurrentSession(preview.normalizedPrompt);
+                editorLastAppliedKey = preview.key;
+                renderEditorPreview();
+            });
+        }
+
+        if (editorOpenDetailBtn) {
+            editorOpenDetailBtn.addEventListener('click', () => {
+                const preview = renderEditorPreview();
+                if (preview.errors.length > 0) return;
+                upsertPromptIntoCurrentSession(preview.normalizedPrompt);
+                editorLastAppliedKey = preview.key;
+                location.hash = preview.detailRoute;
+            });
+        }
+
+        if (editorSaveBtn) {
+            editorSaveBtn.addEventListener('click', async () => {
+                const preview = renderEditorPreview();
+                if (preview.errors.length > 0) return;
+
+                persistEditorSaveSettings();
+                const saveMode = getConfiguredSaveMode();
+                editorSaveFeedback = {
+                    tone: '',
+                    title: '正在保存',
+                    message: saveMode === 'github-direct'
+                        ? `正在通过 GitHub Direct 模式将 ${preview.key} 写入仓库...`
+                        : `正在将 ${preview.key} 持久化到线上配置的 save endpoint...`
+                };
+                renderEditorSaveStatus();
+
+                const originalLabel = editorSaveBtn.textContent;
+                editorSaveBtn.disabled = true;
+                editorSaveBtn.textContent = '保存中...';
+
+                try {
+                    const result = await savePromptOnline(preview);
+                    upsertPromptIntoCurrentSession(preview.normalizedPrompt);
+                    editorLastAppliedKey = preview.key;
+                    editorSaveFeedback = {
+                        tone: 'is-success',
+                        title: result.created ? '已创建线上文件' : '已更新线上文件',
+                        message: `${result.repoPath} 已写入 ${result.branch || '目标分支'}。${result.deploymentHint || ''}`.trim(),
+                        linkHref: result.commitUrl || '',
+                        linkLabel: result.commitUrl ? '查看 Git 提交' : ''
+                    };
+                    renderEditorPreview();
+                } catch (error) {
+                    editorSaveFeedback = {
+                        tone: 'is-error',
+                        title: '线上保存失败',
+                        message: error instanceof Error ? error.message : '未知保存错误'
+                    };
+                    renderEditorSaveStatus();
+                } finally {
+                    editorSaveBtn.textContent = originalLabel;
+                    renderEditorPreview();
+                }
+            });
+        }
 
         const imageLoadingCleanupByImg = new WeakMap();
 
@@ -1956,14 +2981,19 @@
             document.body.style.overflow = 'hidden';
         }
 
-        function renderDetailPrompt(prompt) {
-            detailContent.innerHTML = '';
-            activeDetailPrompt = prompt;
+        function renderPromptDetailContent(target, prompt, options) {
+            if (!target) return;
+            const opts = options && typeof options === 'object' ? options : {};
+            const shouldActivate = opts.activate !== undefined ? Boolean(opts.activate) : false;
+            const enableModal = opts.enableModal !== undefined ? Boolean(opts.enableModal) : true;
+
+            target.innerHTML = '';
+            if (shouldActivate) activeDetailPrompt = prompt;
 
             const title = document.createElement('div');
             title.className = 'detail-title';
-            title.textContent = prompt.title || prompt.id;
-            detailContent.appendChild(title);
+            title.textContent = prompt.title || prompt.key;
+            target.appendChild(title);
 
             const tags = Array.isArray(prompt.tags) ? prompt.tags : [];
             if (tags.length > 0) {
@@ -1975,7 +3005,7 @@
                     chip.textContent = translateTag(tag, currentLang);
                     tagsEl.appendChild(chip);
                 });
-                detailContent.appendChild(tagsEl);
+                target.appendChild(tagsEl);
             }
 
             const promptSection = document.createElement('div');
@@ -2010,14 +3040,14 @@
             promptWrapper.appendChild(copyBtn);
             promptWrapper.appendChild(promptText);
             promptSection.appendChild(promptWrapper);
-            detailContent.appendChild(promptSection);
+            target.appendChild(promptSection);
 
             if (prompt.images.example.length > 0) {
                 const exampleSection = document.createElement('div');
                 exampleSection.className = 'detail-section';
                 exampleSection.innerHTML = '<h2>Example</h2>';
-                exampleSection.appendChild(renderImageGroup(prompt.images.example, 'example', `${prompt.title} Example`));
-                detailContent.appendChild(exampleSection);
+                exampleSection.appendChild(renderImageGroup(prompt.images.example, 'example', `${prompt.title} Example`, { enableModal }));
+                target.appendChild(exampleSection);
             }
 
             const twoColSection = document.createElement('div');
@@ -2026,16 +3056,16 @@
             const inputSection = document.createElement('div');
             inputSection.className = 'detail-section';
             inputSection.innerHTML = '<h2>Input</h2>';
-            inputSection.appendChild(renderImageGroup(prompt.images.input, 'input', `${prompt.title} Input`));
+            inputSection.appendChild(renderImageGroup(prompt.images.input, 'input', `${prompt.title} Input`, { enableModal }));
             twoColSection.appendChild(inputSection);
 
             const generatedSection = document.createElement('div');
             generatedSection.className = 'detail-section';
             generatedSection.innerHTML = '<h2>Generated</h2>';
-            generatedSection.appendChild(renderImageGroup(prompt.images.generated, 'generated', `${prompt.title} Generated`));
+            generatedSection.appendChild(renderImageGroup(prompt.images.generated, 'generated', `${prompt.title} Generated`, { enableModal }));
             twoColSection.appendChild(generatedSection);
 
-            detailContent.appendChild(twoColSection);
+            target.appendChild(twoColSection);
 
             if (prompt.note) {
                 const noteSection = document.createElement('div');
@@ -2045,27 +3075,343 @@
                 noteText.className = 'detail-note';
                 noteText.textContent = prompt.note;
                 noteSection.appendChild(noteText);
-                detailContent.appendChild(noteSection);
+                target.appendChild(noteSection);
             }
         }
 
-        async function renderDetail(id) {
+        function renderDetailPrompt(prompt) {
+            renderPromptDetailContent(detailContent, prompt, { activate: true });
+        }
+
+        function renderEditorStatus(preview) {
+            if (!editorStatus) return;
+            editorStatus.innerHTML = '';
+
+            const successCard = document.createElement('div');
+            successCard.className = `manage-status-card${preview.errors.length > 0 ? '' : ' is-success'}`;
+            const successTitle = document.createElement('strong');
+            successTitle.textContent = preview.errors.length > 0 ? '表单尚未通过校验' : '表单已通过基础校验';
+            const successText = document.createElement('p');
+            successText.textContent = preview.errors.length > 0
+                ? '修正错误后才能应用到当前会话或打开详情路由。'
+                : `当前详情路由：${preview.detailRoute}`;
+            successCard.appendChild(successTitle);
+            successCard.appendChild(successText);
+            editorStatus.appendChild(successCard);
+
+            if (preview.errors.length > 0) {
+                const errorCard = document.createElement('div');
+                errorCard.className = 'manage-status-card is-error';
+                const errorTitle = document.createElement('strong');
+                errorTitle.textContent = '需要修正';
+                errorCard.appendChild(errorTitle);
+                const errorList = document.createElement('ul');
+                preview.errors.forEach((item) => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    errorList.appendChild(li);
+                });
+                errorCard.appendChild(errorList);
+                editorStatus.appendChild(errorCard);
+            }
+
+            if (preview.warnings.length > 0 || editorLastAppliedKey) {
+                const warningCard = document.createElement('div');
+                warningCard.className = `manage-status-card${preview.warnings.length > 0 ? ' is-warning' : ''}`;
+                const warningTitle = document.createElement('strong');
+                warningTitle.textContent = preview.warnings.length > 0 ? '提示' : '当前状态';
+                warningCard.appendChild(warningTitle);
+
+                if (preview.warnings.length > 0) {
+                    const warningList = document.createElement('ul');
+                    preview.warnings.forEach((item) => {
+                        const li = document.createElement('li');
+                        li.textContent = item;
+                        warningList.appendChild(li);
+                    });
+                    warningCard.appendChild(warningList);
+                }
+
+                if (editorLastAppliedKey) {
+                    const appliedText = document.createElement('p');
+                    appliedText.textContent = `最近一次已应用到当前会话的路径：${editorLastAppliedKey}`;
+                    warningCard.appendChild(appliedText);
+                }
+
+                editorStatus.appendChild(warningCard);
+            }
+        }
+
+        function renderEditorSaveStatus() {
+            if (!editorSaveStatus) return;
+            editorSaveStatus.innerHTML = '';
+
+            const mode = getConfiguredSaveMode();
+
+            const configCard = document.createElement('div');
+            configCard.className = 'manage-status-card';
+            const configTitle = document.createElement('strong');
+            configTitle.textContent = '当前保存配置';
+            configCard.appendChild(configTitle);
+
+            if (mode === 'github-direct') {
+                const owner = getConfiguredGitHubOwner();
+                const repo = getConfiguredGitHubRepo();
+                const branch = getConfiguredGitHubBranch();
+                const githubToken = getConfiguredGitHubToken();
+
+                const targetText = document.createElement('p');
+                targetText.textContent = `GitHub Target: ${owner || '<owner>'}/${repo || '<repo>'} @ ${branch}`;
+                const tokenText = document.createElement('p');
+                tokenText.textContent = githubToken
+                    ? '已提供 GitHub PAT'
+                    : '尚未提供 GitHub PAT';
+                const noteText = document.createElement('p');
+                noteText.textContent = 'GitHub Pages 模式下，浏览器会直接调用 GitHub API 将 prompt JSON 写回仓库。';
+                configCard.appendChild(targetText);
+                configCard.appendChild(tokenText);
+                configCard.appendChild(noteText);
+            } else {
+                const endpoint = normalizeSaveEndpoint(getConfiguredSaveEndpoint()) || DEFAULT_SAVE_ENDPOINT;
+                const token = getEditorSaveToken();
+                const configText = document.createElement('p');
+                configText.textContent = `Endpoint: ${endpoint}`;
+                const tokenText = document.createElement('p');
+                tokenText.textContent = token
+                    ? '已提供 Save Access Token'
+                    : '尚未提供 Save Access Token';
+                configCard.appendChild(configText);
+                configCard.appendChild(tokenText);
+            }
+
+            editorSaveStatus.appendChild(configCard);
+
+            if (!editorSaveFeedback) return;
+
+            const feedbackCard = document.createElement('div');
+            feedbackCard.className = `manage-status-card${editorSaveFeedback.tone ? ` ${editorSaveFeedback.tone}` : ''}`;
+            const feedbackTitle = document.createElement('strong');
+            feedbackTitle.textContent = editorSaveFeedback.title;
+            const feedbackMessage = document.createElement('p');
+            feedbackMessage.textContent = editorSaveFeedback.message;
+            feedbackCard.appendChild(feedbackTitle);
+            feedbackCard.appendChild(feedbackMessage);
+
+            if (editorSaveFeedback.linkHref && editorSaveFeedback.linkLabel) {
+                const link = document.createElement('a');
+                link.href = editorSaveFeedback.linkHref;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.textContent = editorSaveFeedback.linkLabel;
+                link.style.display = 'inline-block';
+                link.style.marginTop = '10px';
+                feedbackCard.appendChild(link);
+            }
+
+            editorSaveStatus.appendChild(feedbackCard);
+        }
+
+        function encodeUtf8ToBase64(value) {
+            const encoder = new TextEncoder();
+            const bytes = encoder.encode(value);
+            let binary = '';
+            for (const byte of bytes) {
+                binary += String.fromCharCode(byte);
+            }
+            return btoa(binary);
+        }
+
+        async function getGitHubExistingFileSha({ owner, repo, branch, repoPath, token }) {
+            const url = new URL(`https://api.github.com/repos/${owner}/${repo}/contents/${repoPath}`);
+            url.searchParams.set('ref', branch);
+
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/vnd.github+json',
+                    Authorization: `Bearer ${token}`,
+                    'X-GitHub-Api-Version': '2022-11-28'
+                }
+            });
+
+            if (response.status === 404) return null;
+
+            let data = null;
+            try {
+                data = await response.json();
+            } catch (error) {
+                throw new Error(`读取 GitHub 现有文件状态失败（HTTP ${response.status}）。`);
+            }
+
+            if (!response.ok) {
+                throw new Error(data && data.message ? data.message : `读取 GitHub 文件状态失败（HTTP ${response.status}）。`);
+            }
+
+            return data && typeof data.sha === 'string' ? data.sha : null;
+        }
+
+        async function savePromptViaGitHubDirect(preview) {
+            const owner = getConfiguredGitHubOwner();
+            const repo = getConfiguredGitHubRepo();
+            const branch = getConfiguredGitHubBranch();
+            const token = getConfiguredGitHubToken();
+
+            if (!owner) throw new Error('GitHub Owner 不能为空。');
+            if (!repo) throw new Error('GitHub Repo 不能为空。');
+            if (!branch) throw new Error('GitHub Branch 不能为空。');
+            if (!token) throw new Error('GitHub PAT 不能为空。');
+
+            const repoPath = `prompts/${preview.key}.json`;
+            const sha = await getGitHubExistingFileSha({ owner, repo, branch, repoPath, token });
+
+            const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${repoPath}`, {
+                method: 'PUT',
+                headers: {
+                    Accept: 'application/vnd.github+json',
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'X-GitHub-Api-Version': '2022-11-28'
+                },
+                body: JSON.stringify({
+                    message: `Save prompt ${preview.key}`,
+                    content: encodeUtf8ToBase64(`${preview.serializedJson}\n`),
+                    branch,
+                    ...(sha ? { sha } : {})
+                })
+            });
+
+            let data = null;
+            try {
+                data = await response.json();
+            } catch (error) {
+                throw new Error(`GitHub 返回了无法解析的响应（HTTP ${response.status}）。`);
+            }
+
+            if (!response.ok) {
+                throw new Error(data && data.message ? data.message : `GitHub 保存失败（HTTP ${response.status}）。`);
+            }
+
+            return {
+                provider: 'github-direct',
+                repoPath,
+                branch,
+                created: !sha,
+                fileSha: data?.content?.sha || null,
+                commitSha: data?.commit?.sha || null,
+                commitUrl: data?.commit?.html_url || null,
+                deploymentHint: 'GitHub 仓库更新后，你现有的 workflow 会重新构建并推送 pages 分支。'
+            };
+        }
+
+        async function savePromptOnline(preview) {
+            const mode = getConfiguredSaveMode();
+            if (mode === 'github-direct') {
+                return savePromptViaGitHubDirect(preview);
+            }
+
+            const endpoint = normalizeSaveEndpoint(getConfiguredSaveEndpoint()) || DEFAULT_SAVE_ENDPOINT;
+            const token = getEditorSaveToken();
+
+            if (!endpoint) {
+                throw new Error('Save Endpoint 不能为空。');
+            }
+            if (!token) {
+                throw new Error('Save Access Token 不能为空。');
+            }
+
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    key: preview.key,
+                    document: preview.promptDoc,
+                    commitMessage: `Save prompt ${preview.key}`
+                })
+            });
+
+            let data = null;
+            try {
+                data = await response.json();
+            } catch (error) {
+                throw new Error(`保存接口返回了无法解析的响应（HTTP ${response.status}）。`);
+            }
+
+            if (!response.ok || !data || data.ok !== true) {
+                const message = data && data.error && typeof data.error.message === 'string'
+                    ? data.error.message
+                    : `保存失败（HTTP ${response.status}）。`;
+                throw new Error(message);
+            }
+
+            return data.data || {};
+        }
+
+        function renderEditorPreview() {
+            const preview = buildPromptDocumentFromDraft(getEditorDraftFromInputs());
+            if (manageRouteChip) manageRouteChip.textContent = preview.detailRoute;
+            if (editorJsonPreview) editorJsonPreview.textContent = preview.serializedJson;
+
+            renderEditorStatus(preview);
+            renderEditorSaveStatus();
+
+            if (editorApplyBtn) editorApplyBtn.disabled = preview.errors.length > 0;
+            if (editorOpenDetailBtn) editorOpenDetailBtn.disabled = preview.errors.length > 0;
+            if (editorCopyJsonBtn) editorCopyJsonBtn.disabled = preview.errors.length > 0;
+            if (editorSaveBtn) editorSaveBtn.disabled = preview.errors.length > 0;
+
+            if (editorCardPreview) {
+                editorCardPreview.innerHTML = '';
+                editorCardPreview.appendChild(createCardElement(preview.normalizedPrompt, true));
+            }
+
+            renderPromptDetailContent(editorDetailPreview, preview.normalizedPrompt, { activate: false, enableModal: false });
+            return preview;
+        }
+
+        function upsertPromptIntoCurrentSession(prompt) {
+            const existingIndex = allPrompts.findIndex((item) => item.key === prompt.key);
+            if (existingIndex >= 0) {
+                allPrompts.splice(existingIndex, 1, prompt);
+            } else {
+                allPrompts.push(prompt);
+            }
+
+            allPrompts = sortPrompts(allPrompts);
+            detailCache.set(prompt.key, prompt);
+            detailInFlight.delete(prompt.key);
+            rebuildTags();
+            renderTags();
+
+            if (!listPage.hidden) {
+                filterAndRender();
+            }
+
+            if (!detailPage.hidden && activeDetailPrompt && activeDetailPrompt.key === prompt.key) {
+                renderDetailPrompt(prompt);
+            }
+        }
+
+        async function renderDetail(promptKey) {
+            const key = normalizePromptKey(promptKey);
             const token = ++activeDetailRequestToken;
             detailContent.innerHTML = '';
             activeDetailPrompt = null;
 
-            const summary = allPrompts.find(item => item.id === id);
+            const summary = allPrompts.find(item => item.key === key);
             if (!summary) {
                 const empty = document.createElement('div');
                 empty.className = 'no-results';
-                empty.textContent = `未找到 ID 为 "${id}" 的示例`;
+                empty.textContent = `未找到路径为 "${key}" 的示例`;
                 detailContent.appendChild(empty);
                 return;
             }
 
             const title = document.createElement('div');
             title.className = 'detail-title';
-            title.textContent = summary.title || summary.id;
+            title.textContent = summary.title || summary.key;
             detailContent.appendChild(title);
 
             const summaryTags = Array.isArray(summary.tags) ? summary.tags : [];
@@ -2084,7 +3430,7 @@
             const hasFullPrompt = typeof summary.prompt === 'string' && summary.prompt.trim().length > 0;
             if (hasFullPrompt) {
                 // Backward-compat: if we loaded an aggregated/full list, avoid redundant network fetch.
-                detailCache.set(id, summary);
+                detailCache.set(key, summary);
                 renderDetailPrompt(summary);
                 return;
             }
@@ -2099,17 +3445,17 @@
             detailContent.appendChild(loadingSection);
 
             try {
-                const prompt = await loadDetailPrompt(id);
+                const prompt = await loadDetailPrompt(key);
                 if (token !== activeDetailRequestToken) return;
                 renderDetailPrompt(prompt);
             } catch (error) {
                 if (token !== activeDetailRequestToken) return;
-                console.error('Error loading prompt detail:', { id, error });
+                console.error('Error loading prompt detail:', { key, error });
                 detailContent.innerHTML = '';
 
                 const titleEl = document.createElement('div');
                 titleEl.className = 'detail-title';
-                titleEl.textContent = summary.title || summary.id;
+                titleEl.textContent = summary.title || summary.key;
                 detailContent.appendChild(titleEl);
 
                 if (summaryTags.length > 0) {
@@ -2140,7 +3486,7 @@
                 retryBtn.type = 'button';
                 retryBtn.textContent = '重试';
                 retryBtn.addEventListener('click', () => {
-                    void renderDetail(id);
+                    void renderDetail(key);
                 });
 
                 section.appendChild(message);
@@ -2155,6 +3501,7 @@
             // 先 unhide，让页面有高度
             listPage.hidden = false;
             detailPage.hidden = true;
+            managePage.hidden = true;
 
             activeDetailRequestToken += 1; // invalidate in-flight detail fetch
             activeDetailPrompt = null;
@@ -2174,20 +3521,38 @@
             restoreListScrollIfNeeded();
         }
 
-        function showDetailPage(id) {
+        function showManagePage() {
+            listPage.hidden = true;
+            detailPage.hidden = true;
+            managePage.hidden = false;
+            closeModal();
+            activeDetailRequestToken += 1;
+            activeDetailPrompt = null;
+            renderEditorPreview();
+        }
+
+        function showDetailPage(promptKey) {
             window.scrollTo({ top: 0, behavior: 'instant' });
             listPage.hidden = true;
             detailPage.hidden = false;
+            managePage.hidden = true;
             closeModal();
-            void renderDetail(id);
+            void renderDetail(promptKey);
         }
 
         function renderRoute() {
             const hash = location.hash || '#/';
+            if (hash === '#/manage') {
+                showManagePage();
+                return;
+            }
             const match = hash.match(/^#\/detail\/(.+)$/);
             if (match) {
-                showDetailPage(decodeURIComponent(match[1]));
-                return;
+                const promptKey = decodePromptKey(match[1]);
+                if (promptKey) {
+                    showDetailPage(promptKey);
+                    return;
+                }
             }
             showListPage();
         }
@@ -2197,6 +3562,12 @@
         backBtn.addEventListener('click', () => {
             location.hash = '#/';
         });
+
+        if (manageBackBtn) {
+            manageBackBtn.addEventListener('click', () => {
+                location.hash = '#/';
+            });
+        }
 
         detailContent.addEventListener('click', (e) => {
             const img = e.target.closest('img[data-modal-type][data-modal-index]');
@@ -2241,6 +3612,9 @@
                 allPrompts = await loadAllPrompts();
                 rebuildTags();
                 renderTags();
+                loadEditorSaveSettings();
+                applyEditorDraftToInputs(getEmptyEditorDraft());
+                renderEditorPreview();
                 renderRoute();
             } catch (error) {
                 console.error('Error loading prompts:', error);
