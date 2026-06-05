@@ -1,0 +1,17 @@
+{
+  "title": "夏日香车",
+  "tags": [
+    "图生图"
+  ],
+  "prompt": "Based on the identity reference image and the provided best yellow-car reference photo, create one fresh tasteful adult fashion editorial photograph in the same visual language. Keep Sidona recognizable from the identity reference while following the best reference composition closely: bright yellow classic sports car hood, vertical 9:16 crop, hard midday sunlight, asphalt parking lot, green curb, orange traffic cone, glossy yellow paint, clean white sleeveless one-piece bodysuit, small gold hoop earrings.\n\nMatch the best reference mood and expression: Sidona reclines diagonally across the hood, one arm raised over her forehead to shield the sun, the other hand relaxed near her hip or along the car. Her face should be the main improvement target: sultry but elegant half-lidded eyes, confident relaxed gaze toward the camera, softly parted lips, calm heat-of-the-day sensuality, slightly more seductive than the previous batch but still premium fashion editorial, never pornographic or vulgar. Use one subtle expression direction for this single photo: drowsy gaze, quiet confidence, soft direct stare, sun-struck squint, or relaxed lips.\n\nComposition target: similar to the best reference image, with Sidona placed through the lower and center frame, the yellow car hood filling most of the image, the car windshield and mirror near the upper right or upper left, one round headlight visible when possible, and parking-lot details in the top background. Use a slight overhead / three-quarter top-down camera angle, 35mm to 50mm editorial lens feel, sharp focus on her face and upper body, natural depth of field.\n\nLighting and color: hard direct noon sunlight, crisp shadow from her raised arm across the face, bright glossy yellow highlights, warm natural skin, deep asphalt contrast, clean modern magazine color, subtle Fujifilm Provia feeling, high saturation but realistic, no pastel wash, no haze, no orange-teal grading.\n\nGenerate exactly one clean full-frame realistic photograph only. This must be one continuous single image, not a grid, not a collage, not a contact sheet, not split-screen, not multiple repeated frames, not a storyboard, not before-and-after panels. Do not include any typography, title, logo, watermark, caption, white footer block, border, magazine layout, micro text, or graphic design inside the generated image. The image must be a pure photo so the SIDONA magazine typography can be added later in post-processing.\n\nNegative prompt: grid, collage, contact sheet, split-screen, multi-panel layout, repeated frames, storyboard, before-and-after panels, text, watermark, caption, logo, brand badge, Russian text, poster typography, white footer block, duplicated face, extra limbs, malformed hands, distorted fingers, plastic skin, over-smoothed face, exaggerated anatomy, explicit nudity, lingerie styling, pornographic mood, open-mouth moaning, wet skin, oily skin, blurry face, low-resolution, CGI, anime, illustration.",
+  "images": {
+    "generated": [
+      "https://tubed.2088.eu.org/file/AIGI/works/1780627180904_kelivo-1780626821051.jpg",
+      "https://files.catbox.moe/9dzkns.jpg",
+      "https://images2.imgbox.com/bf/0d/Lt0oBaKH_o.jpg"
+    ],
+    "example": [
+      "https://files.catbox.moe/ry66tp.jpg"
+    ]
+  }
+}
