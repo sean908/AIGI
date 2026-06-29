@@ -1,0 +1,19 @@
+{
+  "title": "水的静谧",
+  "tags": [
+    "图生图"
+  ],
+  "prompt": "围绕任意主题对象生成一张具有近距离沉浸感的影像：主题主形体占据画面核心，被一层清澈透明的介质隔开，介质上缘形成明显的水平折射边界，边界上方有柔软波纹和被拉长的高光，边界下方主体被轻微变形、遮挡和放大，营造一种安静凝视、近在眼前却隔着水面的心理距离。主形体只保留必要的表情、轮廓或关键识别特征，边缘局部被深色环境吞没，少量主题派生的小型漂浮符号在前景和侧边穿过，作为尺度、方向和节奏点，不喧宾夺主；它们应有半透明边缘、柔和阴影和轻微运动感，让空间像真实介质中一样有前后层次。光线从上方和侧前方进入，在主体表面留下流动的斑驳亮点、细碎反光和清透气泡般的微粒，整体质感要像摄影级近景，细节柔和但眼前焦点清晰。色彩从主题自身的材质、情绪与环境语义中提取，保留大面积干净深色背景、局部高明度透明亮区、少量温暖或冷暖相撞的发光强调色，以及低饱和支撑色的面积关系；最终情绪应清透安静、亲密而有梦感，亮部干净发光，暗部保持清晰纯净，避免浑浊、陈旧、烟尘感和脏灰色覆盖。",
+  "images": {
+    "generated": [
+      "https://tubed.2088.eu.org/file/AIGI/works/1782710588000_image.png",
+      "https://files.catbox.moe/zhjbvo.png",
+      "https://images2.imgbox.com/08/fe/6SlZjh7a_o.png https://images2.imgbox.com/3a/46/Dvk5ktpC_o.png",
+      "https://files.catbox.moe/5lq37g.png"
+    ],
+    "example": [
+      "https://pbs.twimg.com/media/HL6OhYUaUAAtwy1?format=jpg&name=large",
+      "https://pbs.twimg.com/media/HL6SfWtaIAAuuzX?format=jpg&name=large"
+    ]
+  }
+}
